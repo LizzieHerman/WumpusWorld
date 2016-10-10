@@ -15,6 +15,11 @@ public class Map {
     
     public Map(int n){
         map = new MapCell[n][n];
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                map[i][j] = new MapCell();
+            }
+        }
     }
     
     public MapCell getCell(int x, int y){
