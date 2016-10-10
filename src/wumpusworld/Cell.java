@@ -16,6 +16,12 @@ public class Cell {
     boolean obstacle;
     boolean gold;
     
+    public Cell(){
+        wumpus = false;
+        pit = false;
+        obstacle = false;
+        gold = false;
+    }
     public Cell(boolean w, boolean p, boolean o, boolean g){
         wumpus = w;
         pit = p;
