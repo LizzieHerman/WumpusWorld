@@ -10,6 +10,7 @@ public class main {
             WumpusWorld world = new WumpusWorld(i);
             int numWump = world.generateWorld(0.01, 0.01, 0.01);
             Explorer agent = new Explorer(world, i, numWump);
+            world.setExplorer(agent);
         }
     }
 
