@@ -92,16 +92,26 @@ public class Explorer {
          */
     }
     
-    public void die(int x1, int y1){
+    // takes in last safe location and whetheror not a wumpus killed them
+    public void die(int x1, int y1, boolean wumpus){
         cost -= 1000;
         x = x1;
         y = y1;
         System.out.print("You died");
+        // add wumpus/ pit to knowledge base
     }
     
-    public void getGold(){
-        cost += 1000;
-        System.out.print("You Won");
+    public void seeGlitter(){
+        System.out.print("See Glittering");
+        // add gold to knowledge base
+    }
+    
+    public void grabGold(){
+        if(world.removeGold()){
+            cost += 1000;
+            System.out.print("You Won");
+            // how to end game
+        }
     }
     
     public void smellStench(){
