@@ -29,7 +29,7 @@ public class Explorer {
         world = w;
     }
     
-    public boolean move(){
+    public void move(){
         cost -= 10;
         switch(direction){
             case 1:
@@ -43,44 +43,80 @@ public class Explorer {
                 break;
             case 4:
                 y--;
+                break;
         }
-        if(world.getCell(x, y) == null){
-            switch(direction){
-                case 1:
-                    x--;
-                    break;
-                case 2:
-                    y--;
-                    break;
-                case 3:
-                    x++;
-                    break;
-                case 4:
-                    y++;
-            }
-            return false;
-        }
-        return true;    
+        world.moveExplorer(x, y);
     }
     
     public void turnRight(){
         cost -= 10;
         if(direction == 4) direction = 1;
         else direction++;
+        world.turnExplorer(false);
     }
     
     public void turnLeft(){
         cost -= 10;
         if(direction == 1) direction = 4;
         else direction--;
+        world.turnExplorer(true);
     }
     
-    public void shootArrow(){
+    // return whether able to shoot arrow
+    public boolean shootArrow(){
+        if(arrows < 0){
+            return false;
+        }
         cost -= 10;
         arrows--;
-        /* to-do
-         * how do we here a scream
-         * regain cost is wumpus shot
+        world.shootArrow(x,y,direction);
+        return true;
+    }
+    
+    public void feelBump(int x1, int y1){
+        x = x1;
+        y = y1;
+        System.out.print("Feel Bump");
+        /*
+         * TO-DO
+         * send sense info to knowledge base
+         */
+    }
+    
+    public void hearScream(){
+        cost += 10;
+        System.out.print("Heard Scream");
+        /*
+         * TO-DO
+         * send sense info to knowledge base
+         */
+    }
+    
+    public void die(int x1, int y1){
+        cost -= 1000;
+        x = x1;
+        y = y1;
+        System.out.print("You died");
+    }
+    
+    public void getGold(){
+        cost += 1000;
+        System.out.print("You Won");
+    }
+    
+    public void smellStench(){
+        System.out.print("Smelled Stench");
+        /*
+         * TO-DO
+         * send sense info to knowledge base
+         */
+    }
+    
+    public void feelBreeze(){
+        System.out.print("Felt Breeze");
+        /*
+         * TO-DO
+         * send sense info to knowledge base
          */
     }
 }
