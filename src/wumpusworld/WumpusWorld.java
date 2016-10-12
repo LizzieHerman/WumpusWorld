@@ -7,6 +7,8 @@ import java.util.Random;
  */
 public class WumpusWorld {
     private Cell world[][];
+    private Explorer agent;
+    private int[] agentState = { 0, 0, 1};
     
     public WumpusWorld(int n){
         world = new Cell[n][n];
@@ -44,6 +46,10 @@ public class WumpusWorld {
         return numWumpus;
     }
     
+    public void setExplorer(Explorer e){
+        agent = e;
+    }
+    
     public Cell getCell(int x, int y){
         if(x < 0 || x >= world.length || y < 0 || y >= world.length){
             System.out.print("bump");
@@ -56,28 +62,127 @@ public class WumpusWorld {
         return world[x][y];
     }
     
-    public boolean[] senseCell(int x, int y){
-        boolean[] senses = {false, false, false};  //stench, breeze, glimmer
+    public void senseCell(int x, int y){
+        boolean stench = false;
+        boolean breeze = false;
         if(world[x][y].get('g')){
-            senses[2] = true;
+            agent.getGold();
         }
         // we want cells (x+1,y), (x,y+1), (x-1,y), (x,y-1)
         if(x+1 < world.length){
-            if(! senses[0]) senses[0] = world[x+1][y].get('w');
-            if(! senses[1]) senses[1] = world[x+1][y].get('p');
+            if(! stench && world[x+1][y].get('w')){
+                stench = true;
+                agent.smellStench();
+            }
+            if(! breeze && world[x+1][y].get('p')){
+                breeze = true;
+                agent.feelBreeze();
+            }
         }
         if(y+1 < world.length){
-            if(! senses[0]) senses[0] = world[x][y+1].get('w');
-            if(! senses[1]) senses[1] = world[x][y+1].get('p');
+            if(! stench && world[x][y+1].get('w')){
+                stench = true;
+                agent.smellStench();
+            }
+            if(! breeze && world[x][y+1].get('p')){
+                breeze = true;
+                agent.feelBreeze();
+            }
         }
         if(x-1 >= 0){
-            if(! senses[0]) senses[0] = world[x-1][y].get('w');
-            if(! senses[1]) senses[1] = world[x-1][y].get('p');
+            if(! stench && world[x-1][y].get('w')){
+                stench = true;
+                agent.smellStench();
+            }
+            if(! breeze && world[x-1][y].get('p')){
+                breeze = true;
+                agent.feelBreeze();
+            }
         }
         if(y-1 >= 0){
-            if(! senses[0]) senses[0] = world[x][y-1].get('w');
-            if(! senses[1]) senses[1] = world[x][y-1].get('p');
+            if(! stench && world[x][y-1].get('w')){
+                stench = true;
+                agent.smellStench();
+            }
+            if(! breeze && world[x][y-1].get('p')){
+                breeze = true;
+                agent.feelBreeze();
+            }
         }
-        return senses;
+    }
+    
+    public void turnExplorer( boolean left){
+        if(left){
+            if(agentState[2] == 1) agentState[2] = 4;
+            else agentState[2]--;
+        }else{
+            if(agentState[2] == 4) agentState[2] = 1;
+            else agentState[2]++;
+        }
+    }
+    
+    public void moveExplorer(int x, int y){
+        if( x >= world.length || y >= world[x].length || x < 0 || y < 0){
+            agent.feelBump( agentState[0], agentState[1]);
+        }
+        else if(world[x][y].get('o')){
+            agent.feelBump( agentState[0], agentState[1]);
+        }
+        else if(world[x][y].get('g')){
+            agent.getGold();
+        }
+        else if(world[x][y].get('w') || world[x][y].get('p')){
+            agent.die( agentState[0], agentState[1]);
+        }
+        else{
+            agentState[0] = x;
+            agentState[1] = y;
+            senseCell(x,y);
+        }
+    }
+    
+    public void shootArrow(int x, int y, int direction){
+        boolean shotWumpus = false;
+        switch(direction){
+            case 1:
+                for(; x < world.length; x++){
+                    if(world[x][y].get('w')){
+                        world[x][y].set('w', false);
+                        shotWumpus = true;
+                        break;
+                    }
+                }
+                break;
+            case 2:
+                for(; y < world.length; y++){
+                    if(world[x][y].get('w')){
+                        world[x][y].set('w', false);
+                        shotWumpus = true;
+                        break;
+                    }
+                }
+                break;
+            case 3:
+                for(; x >= 0; x--){
+                    if(world[x][y].get('w')){
+                        world[x][y].set('w', false);
+                        shotWumpus = true;
+                        break;
+                    }
+                }
+                break;
+            case 4:
+                for(; y >= 0; y--){
+                    if(world[x][y].get('w')){
+                        world[x][y].set('w', false);
+                        shotWumpus = true;
+                        break;
+                    }
+                }
+                break;
+        }
+        if(shotWumpus){
+            agent.hearScream();
+        }
     }
 }
