@@ -66,7 +66,7 @@ public class WumpusWorld {
         boolean stench = false;
         boolean breeze = false;
         if(world[x][y].get('g')){
-            agent.getGold();
+            agent.seeGlitter();
         }
         // we want cells (x+1,y), (x,y+1), (x-1,y), (x,y-1)
         if(x+1 < world.length){
@@ -128,11 +128,11 @@ public class WumpusWorld {
         else if(world[x][y].get('o')){
             agent.feelBump( agentState[0], agentState[1]);
         }
-        else if(world[x][y].get('g')){
-            agent.getGold();
+        else if(world[x][y].get('w')){
+            agent.die( agentState[0], agentState[1], true);
         }
-        else if(world[x][y].get('w') || world[x][y].get('p')){
-            agent.die( agentState[0], agentState[1]);
+        else if(world[x][y].get('p')){
+            agent.die( agentState[0], agentState[1], false);
         }
         else{
             agentState[0] = x;
@@ -184,5 +184,15 @@ public class WumpusWorld {
         if(shotWumpus){
             agent.hearScream();
         }
+    }
+    
+    public boolean removeGold(){
+        int x = agentState[0];
+        int y = agentState[1];
+        if(x < world.length && y < world[x].length && x >= 0 && y >= 0 && world[x][y].get('g')){
+            world[x][y].set('g', false);
+            return true;
+        }
+        return false;
     }
 }
