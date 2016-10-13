@@ -62,7 +62,7 @@ public class WumpusWorld {
         return world[x][y];
     }
     
-    public void senseCell(int x, int y){
+    public void senseCell(int x, int y){  //may change this section from a sequence of checks to a cell intrinsic. 
         boolean stench = false;
         boolean breeze = false;
         if(world[x][y].get('g')){
