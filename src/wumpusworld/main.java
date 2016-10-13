@@ -9,8 +9,10 @@ public class main {
         for(int i = 5; i <= 25; i += 5){
             WumpusWorld world = new WumpusWorld(i);
             int numWump = world.generateWorld(0.01, 0.01, 0.01);
-            Explorer agent = new Explorer(world, i, numWump);
+            Explorer agent = new FOExplorer(world, i, numWump);
             world.setExplorer(agent);
+            // sense the cell you are currently in
+            agent.getPercepts();
         }
     }
 
