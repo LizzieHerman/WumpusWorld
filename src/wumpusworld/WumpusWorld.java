@@ -18,7 +18,7 @@ public class WumpusWorld {
             }
         }
     }
-   
+    
     public int generateWorld(double pWumpus, double pPit, double pObstacle){
         int numWumpus = 0; // the number of wumpi in the grid
         Random rand = new Random();
@@ -26,9 +26,7 @@ public class WumpusWorld {
         int numEmpty = 0;
         for(int i = 0; i < world.length; i++){
             for(int j = 0; j < world[i].length; j++){
-                if(i == 0 && j == 0){
-                    continue;
-                }else if(rand.nextDouble() < pWumpus){
+                if(rand.nextDouble() < pWumpus){
                     world[i][j].set('w', true);
                     numWumpus++;
                 }else if(rand.nextDouble() < pPit){
@@ -64,13 +62,11 @@ public class WumpusWorld {
         return world[x][y];
     }
     
-    public boolean[] senseCell(int x, int y){
+    public void senseCell(int x, int y){  //may change this section from a sequence of checks to a cell intrinsic. 
         boolean stench = false;
         boolean breeze = false;
-        boolean gold = false;
         if(world[x][y].get('g')){
             agent.seeGlitter();
-            gold = true;
         }
         // we want cells (x+1,y), (x,y+1), (x-1,y), (x,y-1)
         if(x+1 < world.length){
@@ -113,8 +109,6 @@ public class WumpusWorld {
                 agent.feelBreeze();
             }
         }
-        boolean[] senses = {stench, breeze, gold};
-        return senses;
     }
     
     public void turnExplorer( boolean left){
@@ -143,6 +137,7 @@ public class WumpusWorld {
         else{
             agentState[0] = x;
             agentState[1] = y;
+            senseCell(x,y);
         }
     }
     
@@ -201,3 +196,4 @@ public class WumpusWorld {
         return false;
     }
 }
+
