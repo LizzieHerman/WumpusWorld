@@ -32,4 +32,14 @@ public class Map {
         map[x][y].set(c, b);
         return true;
     }
+    
+    public boolean setCell(int x, int y, char c){
+        if(x-1 < 0 || x+1 >= map.length || y-1 < 0 || y+1 >= map.length) return false;
+        map[x][y].set(c);
+        return true;
+    }
+    
+    public int size(){
+        return map.length;
+    }
 }
