@@ -17,6 +17,7 @@ public class Explorer {
     int cost;
     int size;
     int arrows;
+    int timesDied;
     WumpusWorld world;
     
     public Explorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
@@ -26,6 +27,7 @@ public class Explorer {
         cost = 0;
         size = n;
         arrows = num;
+        timesDied = 0;
         world = w;
     }
     
@@ -95,6 +97,7 @@ public class Explorer {
     
     // takes in last safe location and whetheror not a wumpus killed them
     public void die(int x1, int y1, boolean wumpus){
+        timesDied++;
         cost -= 1000;
         x = x1;
         y = y1;
