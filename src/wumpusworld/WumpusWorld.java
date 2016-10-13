@@ -26,7 +26,9 @@ public class WumpusWorld {
         int numEmpty = 0;
         for(int i = 0; i < world.length; i++){
             for(int j = 0; j < world[i].length; j++){
-                if(rand.nextDouble() < pWumpus){
+                if(i == 0 && j == 0){
+                    world[i][j].set('e', true);
+                }else if(rand.nextDouble() < pWumpus){
                     world[i][j].set('w', true);
                     numWumpus++;
                 }else if(rand.nextDouble() < pPit){
@@ -52,20 +54,20 @@ public class WumpusWorld {
     
     public Cell getCell(int x, int y){
         if(x < 0 || x >= world.length || y < 0 || y >= world.length){
-            System.out.print("bump");
             return null;
         }
         if(world[x][y].get('o')){
-            System.out.print("bump");
             return null;
         }
         return world[x][y];
     }
     
-    public void senseCell(int x, int y){  //may change this section from a sequence of checks to a cell intrinsic. 
+    public boolean[] senseCell(int x, int y){  //may change this section from a sequence of checks to a cell intrinsic. 
         boolean stench = false;
         boolean breeze = false;
+        boolean gold = false;
         if(world[x][y].get('g')){
+            gold = true;
             agent.seeGlitter();
         }
         // we want cells (x+1,y), (x,y+1), (x-1,y), (x,y-1)
@@ -109,6 +111,8 @@ public class WumpusWorld {
                 agent.feelBreeze();
             }
         }
+        boolean[] senses = {stench, breeze, gold};
+        return senses;
     }
     
     public void turnExplorer( boolean left){
@@ -135,10 +139,12 @@ public class WumpusWorld {
             agent.die( agentState[0], agentState[1], false);
         }
         else{
+            world[agentState[0]][agentState[1]].set('e', false);
             agentState[0] = x;
             agentState[1] = y;
-            senseCell(x,y);
+            world[agentState[0]][agentState[1]].set('e', true);
         }
+        
     }
     
     public void shootArrow(int x, int y, int direction){
