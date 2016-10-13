@@ -37,6 +37,7 @@ public class RExplorer extends Explorer {
     
     // takes in last safe location and whetheror not a wumpus killed them
     public void die(int x1, int y1, boolean wumpus){
+        timesDied++;
         cost -= 1000;
         x = x1;
         y = y1;
@@ -78,9 +79,7 @@ public class RExplorer extends Explorer {
         // if don't smell stench or feel breeze then surrounding cells are safe
         if(!(senses[0] || senses[1])) System.out.print("Surrounding Cells are Safe");
         /*
-         * TO-DO
-         * other methods update knowledge
-         * infer where to go
+         * where do we go
         */
     }
 }
