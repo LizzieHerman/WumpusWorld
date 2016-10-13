@@ -23,13 +23,10 @@ public class FOExplorer extends Explorer {
         x = x1;
         y = y1;
         System.out.print("Feel Bump");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
     }
     
     public void hearScream(){
+        numWump--;
         cost += 10;
         System.out.print("Heard Scream");
         /*
@@ -46,10 +43,10 @@ public class FOExplorer extends Explorer {
         x = x1;
         y = y1;
         System.out.print("You died");
-        // add wumpus/ pit to knowledge base
     }
     
     public void seeGlitter(){
+        worldMap.setCell(x, y, 'g', true);
         System.out.print("See Glittering");
         // add gold to knowledge base
     }
