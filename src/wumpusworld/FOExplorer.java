@@ -20,7 +20,6 @@ public class FOExplorer extends Explorer {
         numWump = num;
         worldMap.setCell(x, y, 'v');
         worldMap.setCell(x, y, 's', true);
-        getPercepts();
     }
     
     public void move(){
@@ -66,10 +65,10 @@ public class FOExplorer extends Explorer {
     public void die(int x1, int y1, boolean wumpus){
         if(wumpus) worldMap.setCell(x, y, 'w', true);
         if(! wumpus) worldMap.setCell(x, y, 'p', true);
+        timesDied++;
         cost -= 1000;
         x = x1;
         y = y1;
-        System.out.print("You died");
     }
     
     public void seeGlitter(){
@@ -80,6 +79,7 @@ public class FOExplorer extends Explorer {
         if(world.removeGold()){
             cost += 1000;
             // how to end game
+            System.out.print("You won");
         }
     }
     
