@@ -72,4 +72,15 @@ public class RExplorer extends Explorer {
          * send sense info to knowledge base
          */
     }
+    
+    public void getPercepts(){
+        boolean[] senses = world.senseCell(x, y);
+        // if don't smell stench or feel breeze then surrounding cells are safe
+        if(!(senses[0] || senses[1])) System.out.print("Surrounding Cells are Safe");
+        /*
+         * TO-DO
+         * other methods update knowledge
+         * infer where to go
+        */
+    }
 }
