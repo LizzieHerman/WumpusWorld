@@ -19,7 +19,7 @@ public class MapCell extends Cell{
     int visited;
     
     public MapCell() {
-        super(false, false, false, false);
+        super();
         wumpusFlag = false;
         pitFlag = false;
         beenHere = false;
@@ -33,6 +33,7 @@ public class MapCell extends Cell{
         if(c == 'p') return pit;
         if(c == 'o') return obstacle;
         if(c == 'g') return gold;
+        if(c == 'e') return explorer;
         if(c == 'u') return wumpusFlag;
         if(c == 'i') return pitFlag;
         if(c == 'b') return beenHere;
@@ -42,10 +43,7 @@ public class MapCell extends Cell{
     }
     
     public void set(char c, boolean b){
-        if(c == 'w') wumpus = b;
-        if(c == 'p') pit = b;
-        if(c == 'o') obstacle = b;
-        if(c == 'g') gold = b;
+        super.set(c, b);
         if(c == 'u') wumpusFlag = b;
         if(c == 'i') pitFlag = b;
         if(c == 'b') beenHere = b;
@@ -59,9 +57,5 @@ public class MapCell extends Cell{
     
     public int timesVisited(){
         return visited;
-    }
-    
-    public void increaseVisited(){
-        visited++;
     }
 }
