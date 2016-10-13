@@ -11,11 +11,15 @@ package wumpusworld;
  * @author Lizzie Herman
  */
 public class FOExplorer extends Explorer {
-
+    Map worldMap;
+    int numWump;
     public FOExplorer(WumpusWorld w, int n, int num) {
         super(w, n, num);
+        worldMap = new Map(n);
+        numWump = num;
     }
     public void feelBump(int x1, int y1){
+        worldMap.setCell(x, y, 'o', true);
         x = x1;
         y = y1;
         System.out.print("Feel Bump");
@@ -36,6 +40,8 @@ public class FOExplorer extends Explorer {
     
     // takes in last safe location and whetheror not a wumpus killed them
     public void die(int x1, int y1, boolean wumpus){
+        if(wumpus) worldMap.setCell(x, y, 'w', true);
+        if(! wumpus) worldMap.setCell(x, y, 'p', true);
         cost -= 1000;
         x = x1;
         y = y1;
