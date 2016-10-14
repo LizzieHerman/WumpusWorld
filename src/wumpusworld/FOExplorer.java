@@ -5,26 +5,17 @@ package wumpusworld;
  * @author Lizzie Herman
  *Some really small additions by Ryan Freivalds
  */
-public class FOExplorer extends Explorer{
-    int x;
-    int y;
-    int direction; // 1 = East, 2 = South, 3 = West, 4 = North
-    int cost;
-    int size;
-    int arrows;
-    int timesDied;
-    WumpusWorld world;
+public class FOExplorer extends Explorer {
+     Map worldMap;
+     int numWump;
     
-    public FOExplorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
-        x = 0;
-        y = 0;
-        direction = 1;
-        cost = 0;
-        size = n;
-        arrows = num;
-        timesDied = 0;
-        world = w;
-    }
+    public FOExplorer(WumpusWorld w, int n, int num) {
+         super(w, n, num);
+         worldMap = new Map(n);
+         numWump = num;
+         worldMap.setCell(x, y, 'v');
+         worldMap.setCell(x, y, 's', true);
+}
     
     public void move(){
         cost -= 10;
