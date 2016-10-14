@@ -3,70 +3,63 @@ package wumpusworld;
 /**
  *
  * @author Lizzie Herman
+ *Some really small additions by Ryan Freivalds
  */
 public class FOExplorer extends Explorer {
-    Map worldMap;
-    int numWump;
+     Map worldMap;
+     int numWump;
     
     public FOExplorer(WumpusWorld w, int n, int num) {
-        super(w, n, num);
-        worldMap = new Map(n);
-        numWump = num;
-        worldMap.setCell(x, y, 'v');
-        worldMap.setCell(x, y, 's', true);
-    }
+         super(w, n, num);
+         worldMap = new Map(n);
+         numWump = num;
+         worldMap.setCell(x, y, 'v');
+         worldMap.setCell(x, y, 's', true);
+}
     
     public void move(){
         cost -= 10;
         switch(direction){
-            case 1:
+            case 1: //moving East
                 x++;
                 break;
-            case 2:
-                y++;
-                break;
-            case 3:
-                x--;
-                break;
-            case 4:
+            case 2: //Moving South
                 y--;
                 break;
+            case 3: //Moving West
+                x--;
+                break;
+            case 4: //Moving North
+                y++;
+                break;
         }
-        worldMap.setCell(x, y, 'v');
-        worldMap.setCell(x, y, 'b', true);
-        worldMap.setCell(x, y, 'f', false);
         world.moveExplorer(x, y);
         getPercepts();
     }
     
-    public void feelBump(int x1, int y1){
-        worldMap.setCell(x, y, 'o', true);
-        x = x1;
-        y = y1;
+    public void turnRight(){
+        cost -= 10;
+        if(direction == 4) direction = 1; //if facing North and turning right, we are now facing East
+        else direction++; //otherwise our direction is properly set with ++
+        world.turnExplorer(false); //indicates to the world class that we are turning right
     }
     
-    public void hearScream(){
-        numWump--;
-        cost += 10;
-        System.out.print("Heard Scream");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
+    public void turnLeft(){
+        cost -= 10;
+        if(direction == 1) direction = 4; //if facing East and turning Left, we are now facing North
+        else direction--; //otherwise our direction is properly set with --
+        world.turnExplorer(true); //indicates to the world class that we are turning left
     }
     
-    // takes in last safe location and whetheror not a wumpus killed them
-    public void die(int x1, int y1, boolean wumpus){
-        if(wumpus) worldMap.setCell(x, y, 'w', true);
-        if(! wumpus) worldMap.setCell(x, y, 'p', true);
-        timesDied++;
-        cost -= 1000;
-        x = x1;
-        y = y1;
-    }
-    
-    public void seeGlitter(){
-        worldMap.setCell(x, y, 'g', true);
+    // return whether able to shoot arrow
+    public boolean shootArrow(){
+        if(arrows <= 0){ 
+            return false; //Can't fire what's not there.
+        }
+        cost -= 10;
+        arrows--;
+        world.shootArrow(x,y,direction); //sending our "starting" square of firing, and which direction the arrow is being fired.
+        return true;
     }
     
     public void grabGold(){

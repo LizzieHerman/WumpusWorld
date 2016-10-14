@@ -3,11 +3,12 @@ package wumpusworld;
 /**
  *
  * @author Lizzie Herman
+ *Some really small additions by Ryan Freivalds
  */
 public class Explorer {
     int x;
     int y;
-    int direction; // 1=up, 2=right, 3=down, 4=left
+    int direction; // 1 = East, 2 = South, 3 = West, 4 = North
     int cost;
     int size;
     int arrows;
@@ -28,17 +29,17 @@ public class Explorer {
     public void move(){
         cost -= 10;
         switch(direction){
-            case 1:
+            case 1: //moving East
                 x++;
                 break;
-            case 2:
-                y++;
+            case 2: //Moving South
+                y--;
                 break;
-            case 3:
+            case 3: //Moving West
                 x--;
                 break;
-            case 4:
-                y--;
+            case 4: //Moving North
+                y++;
                 break;
         }
         world.moveExplorer(x, y);
@@ -47,26 +48,26 @@ public class Explorer {
     
     public void turnRight(){
         cost -= 10;
-        if(direction == 4) direction = 1;
-        else direction++;
-        world.turnExplorer(false);
+        if(direction == 4) direction = 1; //if facing North and turning right, we are now facing East
+        else direction++; //otherwise our direction is properly set with ++
+        world.turnExplorer(false); //indicates to the world class that we are turning right
     }
     
     public void turnLeft(){
         cost -= 10;
-        if(direction == 1) direction = 4;
-        else direction--;
-        world.turnExplorer(true);
+        if(direction == 1) direction = 4; //if facing East and turning Left, we are now facing North
+        else direction--; //otherwise our direction is properly set with --
+        world.turnExplorer(true); //indicates to the world class that we are turning left
     }
     
     // return whether able to shoot arrow
     public boolean shootArrow(){
-        if(arrows < 0){
-            return false;
+        if(arrows <= 0){ 
+            return false; //Can't fire what's not there.
         }
         cost -= 10;
         arrows--;
-        world.shootArrow(x,y,direction);
+        world.shootArrow(x,y,direction); //sending our "starting" square of firing, and which direction the arrow is being fired.
         return true;
     }
     
