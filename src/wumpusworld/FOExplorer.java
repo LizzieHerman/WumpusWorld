@@ -5,7 +5,7 @@ package wumpusworld;
  * @author Lizzie Herman
  *Some really small additions by Ryan Freivalds
  */
-public class Explorer {
+public class FOExplorer {
     int x;
     int y;
     int direction; // 1 = East, 2 = South, 3 = West, 4 = North
@@ -15,7 +15,7 @@ public class Explorer {
     int timesDied;
     WumpusWorld world;
     
-    public Explorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
+    public FOExplorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
         x = 0;
         y = 0;
         direction = 1;
