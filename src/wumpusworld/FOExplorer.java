@@ -5,7 +5,7 @@ package wumpusworld;
  * @author Lizzie Herman
  *Some really small additions by Ryan Freivalds
  */
-public class FOExplorer {
+public class FOExplorer extends Explorer{
     int x;
     int y;
     int direction; // 1 = East, 2 = South, 3 = West, 4 = North
