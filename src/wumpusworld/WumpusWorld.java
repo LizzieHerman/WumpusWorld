@@ -24,27 +24,35 @@ public class WumpusWorld {
         Random rand = new Random();
         int empty[] = new int[(world.length*world.length)];
         int numEmpty = 0;
+        String grid[][] = new String[world.length][world.length];
         for(int i = 0; i < world.length; i++){
             for(int j = 0; j < world[i].length; j++){
                 if(i == 0 && j == 0){
-                    world[i][j].set('e', true);
+                    grid[i][j] = "explorer";
                 }else if(rand.nextDouble() < pWumpus){
                     world[i][j].set('w', true);
+                    grid[i][j] = "wumpus";
                     numWumpus++;
                 }else if(rand.nextDouble() < pPit){
                     world[i][j].set('p', true);
+                    grid[i][j] = "pit";
                 }else if(rand.nextDouble() < pObstacle){
                     world[i][j].set('o', true);
+                    grid[i][j] = "wall";
                 }
                 else{
                     empty[numEmpty] = ((i*100)+j); // add cell to list of empties
                     numEmpty++;
+                    grid[i][j] = "empty";
                 }
             }
         }
         int gold = empty[rand.nextInt(numEmpty)]; // get random empty cell 
         if(gold < 100) world[0][gold%100].set('g', true);
         else world[gold/100][gold%100].set('g', true);
+        //GameBoard board = new GameBoard(numWumpus, grid);
+        //board.pack();
+        //board.setVisible(true);
         return numWumpus;
     }
     
@@ -139,10 +147,8 @@ public class WumpusWorld {
             agent.die( agentState[0], agentState[1], false);
         }
         else{
-            world[agentState[0]][agentState[1]].set('e', false);
             agentState[0] = x;
             agentState[1] = y;
-            world[agentState[0]][agentState[1]].set('e', true);
         }
         
     }
