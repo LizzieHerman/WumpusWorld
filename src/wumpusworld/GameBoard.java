@@ -15,22 +15,61 @@ import javax.swing.*;
 public class GameBoard extends JFrame {
     GridLayout boardLayout;
     int[] stat = {0, 0, 0, 0, 0, 0, 0, 0};
-    
-    
+    Component[][] grid;
+        
     Container explorer1, explorer2, explorer3, explorer4, arrow1, arrow2, arrow3, arrow4, 
             wumpus, deadwumpus, obstacle, pit, gold, inGold, inWumpus, inPit, empty;
     
-    public GameBoard(int size, int wump){
+    public GameBoard(int wump, String[][] world){
         // the board will include an indexing of the board spaces
-        boardLayout = new GridLayout(size+1, size+1);
+        boardLayout = new GridLayout(world.length+1, world.length+1);
         stat[1] = wump;
+        grid = new Container[world.length+1][world.length+1];
+        makeGrid(world);
         initPanels();
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setTitle("Game Board");
+    }
+    
+    private void makeGrid(String[][] world){
+        for(int i = 0; i < grid.length; i++){
+            for(int j = 0; j < grid.length; j++){
+                int x = i-1; int y = j-1;
+                if(i == 0 && j == 0){
+                    grid[i][j] = Box.createRigidArea(new Dimension(50,50));
+                }else if(i == 0 ){
+                    grid[i][j] = new JLabel(Integer.toString(y));
+                }else if(j == 0){
+                    grid[i][j] = new JLabel(Integer.toString(x));
+                }else{
+                    String inCell = world[x][y];
+                    if(inCell.isEmpty() || inCell.equalsIgnoreCase("empty")){
+                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/empty.png")));
+                    }else if(inCell.equalsIgnoreCase("explorer")){
+                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/explorer1.png")));
+                    }else if(inCell.equalsIgnoreCase("wumpus")){
+                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/wumpus.png")));
+                    }else if(inCell.equalsIgnoreCase("pit")){
+                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/pit.png")));
+                    }else if(inCell.equalsIgnoreCase("gold")){
+                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/gold.png")));
+                    }else if(inCell.equalsIgnoreCase("wall")){
+                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/wall.png")));
+                    }
+                }
+            }
+        }  
     }
     
     private void initPanels(){
         //make board
         JPanel board = new JPanel();
         board.setLayout(boardLayout);
+        for(int j = grid.length-1; j >= 0; j--){
+            for(int i = 0; i < grid.length; i++){
+                board.add(grid[i][j]);
+            }
+        }
         
         // make stats
         JPanel stats = new JPanel();
