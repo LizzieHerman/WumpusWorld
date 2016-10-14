@@ -27,7 +27,6 @@ public class MapCell extends Cell{
         if(c == 'p') return pit;
         if(c == 'o') return obstacle;
         if(c == 'g') return gold;
-        if(c == 'e') return explorer;
         if(c == 'u') return wumpusFlag;
         if(c == 'i') return pitFlag;
         if(c == 'b') return beenHere;
