@@ -10,7 +10,7 @@ public class WumpusWorld {
     private Cell world[][];
     private Explorer agent;
     private int[] agentState = { 0, 0, 1}; //represents the agent's X location, Y location, and current facing, respectively.
-    //Direction is 1 for "West," 2 for "South," 3 for "East," and 4 for "North."
+    //Direction is 1 for "East," 2 for "South," 3 for "West," and 4 for "North."
     
     public WumpusWorld(int n){ //initializes all of our cell objects, to be filled (or left empty) by the generateWorld() function.
         world = new Cell[n][n];
@@ -117,7 +117,7 @@ public class WumpusWorld {
         return senses;
     }
     
-    public void turnExplorer( boolean left){ //Directions are 1 for "West," 2 for "South," 3 for "East," and 4 for "North."
+    public void turnExplorer( boolean left){ //Directions are 1 for "East," 2 for "South," 3 for "West," and 4 for "North."
         if(left){
             if(agentState[2] == 1) agentState[2] = 4; //if we are facing East and turn left we are now facing North.
             else agentState[2]--; //otherwise we just count down to get the proper facing.
