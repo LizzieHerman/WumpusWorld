@@ -31,13 +31,10 @@ public class WumpusWorld {
             for(int j = 0; j < world[i].length; j++){
                 if(i == 0 && j == 0){
                     grid[i][j] = "explorer";
-                }else if(rand.nextDouble() < pWumpus){
-                    world[i][j].set('w', true);
-                    grid[i][j] = "wumpus";
-                    numWumpus++;
                     world[i][j].set('e', true); //placing the player
                 }else if(rand.nextDouble() < pWumpus){ //otherwise seeing if we want to generate a Wumpus, Pit, or wall...
                     world[i][j].set('w', true);
+                    grid[i][j] = "wumpus";
                     numWumpus++; //So we know how many arrows we take with us.
                 }else if(rand.nextDouble() < pPit){
                     world[i][j].set('p', true);
