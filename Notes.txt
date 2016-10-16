@@ -2,9 +2,8 @@ NOTES:
 
 
 Ryan-
-line 37, world.senseCell(x,y)[0] == false ////no danger means stench is false, not true
-null pointer is from trying to access world[-1][] or world[size+1][] for example, check if x1 or y1 are < 0 or > size before using the array with x1 or y1
-delete this if that works.
+line 37, world.senseCell(x,y)[0] == false ////no danger means stench is false, not true as it is written
+check if x1 or y1 are < 0 or > size before using the array with x1 or y1
 
 Oct. 15-
 Here is my version of writing the clauses.  I did not write all of them, only a sample so we could decide if this is how we want to proceed.  Let me know if you think this will work and we can continue filling in the rest.
