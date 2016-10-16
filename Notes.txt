@@ -1,0 +1,13 @@
+NOTES:
+
+
+Ryan-
+line 37, world.senseCell(x,y)[0] == false ////no danger means stench is false, not true
+null pointer is from trying to access world[-1][] or world[size+1][] for example, check if x1 or y1 are < 0 or > size before using the array with x1 or y1
+delete this if that works.
+
+Oct. 15-
+Here is my version of writing the clauses.  I did not write all of them, only a sample so we could decide if this is how we want to proceed.  Let me know if you think this will work and we can continue filling in the rest.
+The idea is the explorer holds a list of clauses and relations.  A relation is a new clause created by the explorer when we flag cells, which is then checked if we unflag something in the future.  Then in our update/resolve step, we tell the explorer which clauses to check and when.
+Also, I still think we should change sensing a smell/breeze/obstacle to just having for example smell boolean in each cell which we fill in when we create the board.  Then we just check that value.  This would make it much easier I think to test things with the clauses.  I didnt do it yet, I wanted your opinions.
+  -Greg

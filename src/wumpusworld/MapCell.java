@@ -5,12 +5,13 @@ package wumpusworld;
  * @author Lizzie Herman
  */
 public class MapCell extends Cell{
-    boolean wumpusFlag;
-    boolean pitFlag;
-    boolean beenHere;
-    boolean safe;
-    boolean frontier;
-    int visited;
+	private boolean wumpusFlag;
+    private boolean pitFlag;
+    private boolean beenHere;
+    private boolean safe;
+    private boolean frontier;
+    private int visited;
+    private boolean smell, breeze;
     
     public MapCell() {
         super();
@@ -20,6 +21,8 @@ public class MapCell extends Cell{
         safe = false;
         frontier = true;
         visited = 0;
+        smell = false;
+        breeze = false;
     }
     
     public boolean get(char c){
@@ -51,4 +54,11 @@ public class MapCell extends Cell{
     public int timesVisited(){
         return visited;
     }
+    
+    public void setSmell(){
+    	this.smell = true;
+    }
+	public void setBreeze(){
+		this.breeze = true;
+	}
 }

@@ -8,6 +8,7 @@ package wumpusworld;
 public class FOExplorer extends Explorer {
      Map worldMap;
      int numWump;
+     //Clause[] rules;
     
     public FOExplorer(WumpusWorld w, int n, int num) {
          super(w, n, num);
@@ -15,6 +16,10 @@ public class FOExplorer extends Explorer {
          numWump = num;
          worldMap.setCell(x, y, 'v');
          worldMap.setCell(x, y, 's', true);
+//         rules = new Clause[numRules];
+//         for(int i = 0; i < numRules; i++){
+//        	 rules[i] = new Clause(i);
+//         }
 }
     
     public void move(){
