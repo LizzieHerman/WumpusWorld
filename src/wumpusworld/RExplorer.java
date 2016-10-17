@@ -15,10 +15,12 @@ public class RExplorer extends Explorer {
 
     public RExplorer(WumpusWorld w, int n, int num) { //n is the size of the world, num is the number of wumpuses
         super(w, n, num);
+    }
+    
+    public void start(){
         System.out.println("So it begins."); //testline
         //agressiveExplorer();
         cautiousExplorer();
-        
     }
 
     public void cautiousExplorer(){  
@@ -32,12 +34,13 @@ public class RExplorer extends Explorer {
         move();
         move();
         */
-        while (world.senseCell(x,y)[2] != true){ //while we do not see glittering 
+        boolean[] senses = world.senseCell(x,y);
+        while (senses[2] != true){ //while we do not see glittering 
             System.out.println();
             System.out.println("Current position is (" + x + "," + y + ")"); //testline
            // System.out.println(world.senseCell(x,y)[0]); testlines
           //  System.out.println(world.senseCell(x,y)[1]);
-            if (world.senseCell(x,y)[0] == false && world.senseCell(x,y)[1] == false){ //if there is no present danger, we are supposed to move at random. 
+            if (senses[0] == false && senses[1] == false){ //if there is no present danger, we are supposed to move at random. 
             System.out.println("No danger detected."); //testline
                 num = rand.nextDouble();    //generate a random number
             /*
@@ -64,6 +67,7 @@ public class RExplorer extends Explorer {
                         break;
                 }
                     move(); //and then move
+                    senses = world.senseCell(x,y);
                 }
                 
                 else if (num <= .50){ //move South
@@ -82,6 +86,7 @@ public class RExplorer extends Explorer {
                         break;
                 }
                     move();
+                    senses = world.senseCell(x,y);
                 }
                 
                 else if (num <= .75){ //Move East
@@ -102,6 +107,7 @@ public class RExplorer extends Explorer {
                         break;
                 }
                     move();
+                    senses = world.senseCell(x,y);
                 }
                 
                 else if (num <= 1){ //move West
@@ -122,6 +128,7 @@ public class RExplorer extends Explorer {
                         break;
                 }
                     move();
+                    senses = world.senseCell(x,y);
                 }
             
             } //END of random move if current space is safe
@@ -134,6 +141,7 @@ public class RExplorer extends Explorer {
                 turnRight();
                 turnRight();
                 move();
+                senses = world.senseCell(x,y);
             }
             
         grabGold();
@@ -143,7 +151,8 @@ public class RExplorer extends Explorer {
     public void agressiveExplorer(){
         Random rand = new Random();
         double num;
-        while (world.senseCell(x,y)[2] != true){ 
+        boolean[] senses = world.senseCell(x,y);
+        while (senses[2] != true){ 
         num = rand.nextDouble();
         if (num <= .25){  //move north
                 System.out.println("Moving North."); //testline
@@ -163,6 +172,7 @@ public class RExplorer extends Explorer {
                         break;
                 }
                     move(); //and then move
+                    senses = world.senseCell(x,y);
                 }
                 
                 else if (num <= .50){ //move South
@@ -181,6 +191,7 @@ public class RExplorer extends Explorer {
                         break;
                 }
                     move();
+                    senses = world.senseCell(x,y);
                 }
                 
                 else if (num <= .75){ //Move East
@@ -201,6 +212,7 @@ public class RExplorer extends Explorer {
                         break;
                 }
                     move();
+                    senses = world.senseCell(x,y);
                 }
                 
                 else if (num <= 1){ //move West
@@ -221,14 +233,15 @@ public class RExplorer extends Explorer {
                         break;
                 }
                     move();
+                    senses = world.senseCell(x,y);
                 }
         }
         grabGold();
     }
     
     public void feelBump(int x1, int y1){
-        //x = x1;
-        //y = y1;
+        x = x1;
+        y = y1;
         System.out.print("Feel Bump");
         /*
          * TO-DO

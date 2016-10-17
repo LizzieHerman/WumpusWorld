@@ -26,6 +26,10 @@ public class Explorer {
         world = w;
     }
     
+    public void start(){
+        move();
+    }
+    
     public void move(){
         cost -= 10;
         switch(direction){
@@ -42,30 +46,7 @@ public class Explorer {
                 y++;
                 break;
         }
-        //System.out.println("attempting to move to (" + x + "," + y + ")"); //testline
-        if (x >= 0 && y >= 0 && x < size && y < size){ 
         world.moveExplorer(x, y);
-                }
-                else{//in the case we would move off the board we reset that x/y change
-                   // System.out.println("WHOOPS");
-                    switch(direction){
-            case 1: //unmoving East
-                x--;
-                break;
-            case 2: //unMoving South
-                y++;
-                break;
-            case 3: //unMoving West
-                x++;
-                break;
-            case 4: //unMoving North
-                y--;
-                break;
-                
-        }
-                   //System.out.println("test");
-                    feelBump(x,y);
-                }
         getPercepts();
     }
     
