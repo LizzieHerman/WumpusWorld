@@ -16,8 +16,8 @@ public class RExplorer extends Explorer {
     public RExplorer(WumpusWorld w, int n, int num) { //n is the size of the world, num is the number of wumpuses
         super(w, n, num);
         System.out.println("So it begins."); //testline
-        agressiveExplorer();
-        
+        //agressiveExplorer();
+        cautiousExplorer();
         
     }
 
@@ -33,8 +33,11 @@ public class RExplorer extends Explorer {
         move();
         */
         while (world.senseCell(x,y)[2] != true){ //while we do not see glittering 
+            System.out.println();
             System.out.println("Current position is (" + x + "," + y + ")"); //testline
-            if (world.senseCell(x,y)[0] && world.senseCell(x,y)[1] == false){ //if there is no present danger, we are supposed to move at random. CURRENTLY BROKEN. He always sees danger.
+           // System.out.println(world.senseCell(x,y)[0]); testlines
+          //  System.out.println(world.senseCell(x,y)[1]);
+            if (world.senseCell(x,y)[0] == false && world.senseCell(x,y)[1] == false){ //if there is no present danger, we are supposed to move at random. 
             System.out.println("No danger detected."); //testline
                 num = rand.nextDouble();    //generate a random number
             /*
@@ -124,6 +127,10 @@ public class RExplorer extends Explorer {
             } //END of random move if current space is safe
             else {
                 System.out.println("Danger is nearby.");
+                if (world.senseCell(x,y)[0] == true)
+                System.out.println("We detect a Wumpus.");
+                if (world.senseCell(x,y)[1] == true)
+                System.out.println("We detect a Pit.");
                 turnRight();
                 turnRight();
                 move();
