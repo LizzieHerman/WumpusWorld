@@ -9,7 +9,7 @@ import java.util.Random;
 public class WumpusWorld {
     private Cell world[][];
     private Explorer agent;
-    private int[] agentState = { 0, 0, 1}; //represents the agent's X location, Y location, and current facing, respectively.
+    private int[] agentState = { 0, 0, 1};// = { 0, 0, 1}; //represents the agent's X location, Y location, and current facing, respectively.
     //Direction is 1 for "East," 2 for "South," 3 for "West," and 4 for "North."
     
     public WumpusWorld(int n){ //initializes all of our cell objects, to be filled (or left empty) by the generateWorld() function.
@@ -137,7 +137,7 @@ public class WumpusWorld {
     }
     
     public void moveExplorer(int x, int y){ //inputs are the cell we are attempting to move to
-        if( x >= world.length || y >= world[x].length || x < 0 || y < 0){ //if attempting to move "out of bounds (and into a wall)."
+        if( x >= world.length || y >= world.length || x < 0 || y < 0){ //if attempting to move "out of bounds (and into a wall)."
             agent.feelBump( agentState[0], agentState[1]); //we don't actually move, but we feel a bump...
         }
         else if(world[x][y].get('o')){ //Or we just walk into a wall
