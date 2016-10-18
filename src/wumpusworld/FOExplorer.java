@@ -29,7 +29,10 @@ public class FOExplorer extends Explorer {
     }
     
     public void start(){
-        move();
+        boolean[] senses = world.senseCell(x,y);
+        while (senses[2] != true){
+        findMove();
+        }
     }
     
     // return whether able to shoot arrow
@@ -180,7 +183,8 @@ public class FOExplorer extends Explorer {
     public void findMove(){
     	int numMoves = 0;
     	boolean moved = false;
-    	
+    	System.out.println("Current position is (" + x + "," + y + ")"); //testline
+        
     	for(int i = 0; i < moveList.length; i++){
     		if(moveList[i] == 1){
     			numMoves++;
@@ -188,6 +192,7 @@ public class FOExplorer extends Explorer {
     	}
     	
     	if(numMoves == 1){ //Move backwards
+                System.out.println("Moving backwards."); //testline
     		super.turnRight();
     		super.turnRight();
     		super.move();
@@ -196,15 +201,18 @@ public class FOExplorer extends Explorer {
     	
     	if(numMoves > 1){ //Move to a frontier cell if there is one
     		if(moveList[0] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move left
+                        System.out.println("Moving left seeking fontier cell.");
     			super.turnLeft();
     			super.move();
     			moved = true;
     		}else if(moveList[1] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move up
-    			super.turnLeft();
+                        System.out.println("Moving forward seeking fontier cell.");
+    			super.turnLeft(); //This need to be here to just move up?
     			super.move();
     			moved = true;
     		}else if(moveList[2] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move right
-    			super.turnLeft();
+                      System.out.println("Moving right seeking fontier cell.");
+            		super.turnRight();  //replaced this with turn right -Ryan
     			super.move();
     			moved = true;
     		}
@@ -215,17 +223,21 @@ public class FOExplorer extends Explorer {
     				MapCell direction = tryToSolve.getCell();
     				int[] coords = direction.getCoords();
     				if(coords[0] < agentState[0]){ //Move in -x direction
+                                        System.out.println("Moving West seeking relation cell.");
     					super.turnLeft();
     					super.move();
     					moved = true;
     				}else if(coords[0] > agentState[0]){ //Move in +x direction
+                                        System.out.println("Moving East seeking relation cell.");
     					super.turnRight();
     					super.move();
     					moved = true;
     				}else if(coords[1] < agentState[1]){ //Move in -y direction
+                                        System.out.println("Moving South seeking relation cell.");
     					super.move();
     					moved = true;
     				}else if(coords[1] > agentState[1]){ //Move in +y direction
+                                        System.out.println("Moving North seeking relation cell.");
     					super.turnRight();
     					super.turnRight();
     					super.move();
@@ -239,23 +251,28 @@ public class FOExplorer extends Explorer {
     			while(!moved){
 	    			if(moveList[random] == 1){
 	    				if(random == 1){ //Move east
+                                                System.out.println("Moving East to safe cell.");
 		    				super.turnRight();
 		    				super.move();
 		    				moved = true;
 		    			}else if(random == 2){ //Move south
+                                                System.out.println("Moving South to safe cell.");
 		    				super.turnRight();
 		    				super.turnRight();
 		    				super.move();
 		    				moved = true;
 		    			}else if(random == 3){ //Move west
+                                                System.out.println("Moving West to safe cell.");
 		    				super.turnLeft();
 		    				super.move();
 		    				moved = true;
 		    			}else if(random == 4){ //Move north
+                                                System.out.println("Moving North to safe cell.");
 		    				super.move();
 		    				moved = true;
 		    			}
 	    			}else{
+                                        System.out.println("I'm freaking lost.");
 	    				random = (int) Math.random()*4 + 1;
 	    			}
     			}
