@@ -14,7 +14,7 @@ public class Explorer {
     int arrows;
     int timesDied;
     WumpusWorld world;
-    int[] agentState;
+    int[] agentState; //represets our agent's X coordinate, Y coordinate, and current facing.
     
     public Explorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
         x = 0;
@@ -25,7 +25,7 @@ public class Explorer {
         arrows = num;
         timesDied = 0;
         world = w;
-        this.agentState = new int[]{0,0,1};
+        this.agentState = new int[]{0,0,1}; //represets our agent's X coordinate, Y coordinate, and current facing.
     }
     
     public void start(){
@@ -78,8 +78,8 @@ public class Explorer {
     }
     
     public void feelBump(int x1, int y1){
-        x = x1;
-        y = y1;
+        x = x1; //changing our agent's x coordinate back to where he was before attempting to move.
+        y = y1; //changing our agent's y coordinate back to where he was before attempting to move.
         System.out.print("Feel Bump");
         /*
          * TO-DO
@@ -100,8 +100,8 @@ public class Explorer {
     public void die(int x1, int y1, boolean wumpus){
         timesDied++;
         cost -= 1000;
-        x = x1;
-        y = y1;
+        x = x1; //changing our agent's x coordinate back to where he was before attempting to move.
+        y = y1; //changing our agent's y coordinate back to where he was before attempting to move.
         System.out.print("You died");
         // add wumpus/ pit to knowledge base
     }
