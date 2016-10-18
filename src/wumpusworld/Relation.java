@@ -7,14 +7,15 @@ import java.util.ArrayList;
  * @author Greg Neznanski
  */
 
-public class Relation extends Clause {
+public class Relation{
 	ArrayList<MapCell> related;
 	char hazard;
 	
-	public Relation(ArrayList<MapCell> related, char hazard) {
-		super(0);
-		this.related = related;
+	public Relation(MapCell[] related, char hazard) {
 		this.hazard = hazard;
+		for(int i = 0; i < related.length ; i++){
+			this.related.add(related[i]);
+		}
 	}
 	
 	public boolean check(){
@@ -43,5 +44,9 @@ public class Relation extends Clause {
 				if(!this.related.get(i).get('i')) related.remove(i);
 			}
 		}
+	}
+	
+	public MapCell getCell(){
+		return related.get(0);
 	}
 }

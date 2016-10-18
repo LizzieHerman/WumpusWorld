@@ -154,6 +154,7 @@ public class WumpusWorld {
             agentState[0] = x; //update our agent's X coordinate
             agentState[1] = y; //update our agent's y coordinate
             world[agentState[0]][agentState[1]].set('e', true); //place the agent in that cell
+            agent.state(agentState);
         }
         
     }

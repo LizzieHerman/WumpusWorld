@@ -15,6 +15,7 @@ public class Clause {
 
 	public int[] condition(int[] currentState, Map worldMap) {
 		boolean doAction = false;
+		MapCell[] surrounding = worldMap.getSurrounding(currentState[0], currentState[1], currentState[2]);;
 
 		// Determine the cell currently facing
 		if (currentState[0] > 0 && currentState[0] < worldMap.size()) { // Check if at edge of x grid
@@ -45,10 +46,10 @@ public class Clause {
 			} else if (this.clauseNumber == 2) { // Clause 1c
 				if (facing.get('o'))
 					doAction = true;
-			} else if (this.clauseNumber == 14) { // Clause 3b
+			} else if (this.clauseNumber == 15) { // Clause 3b
 				if (facing.get('w'))
 					doAction = true;
-			} else if (this.clauseNumber == 15) { // Clause 3c
+			} else if (this.clauseNumber == 16) { // Clause 3c
 				// if scream and no smell in current
 			}
 		}
@@ -76,7 +77,8 @@ public class Clause {
 	public int[] action(int[] currentState) {
 		int[] cellResult = new int[4];
 		if (this.clauseNumber == 0 || this.clauseNumber == 1 || this.clauseNumber == 2) { // Clause 1a, 1b, 1c
-			cellResult[currentState[2] - 1] = 0;
+			cellResult[0] = currentState[2];
+			cellResult[1] = 0;
 			return cellResult;
 		} else if (this.clauseNumber == 3) { // Clause 2a
 			// do something about obstacle
@@ -89,10 +91,10 @@ public class Clause {
 			return cellResult;
 		} else if (this.clauseNumber == 6) { // placeholder
 			return cellResult;
-		} else if (this.clauseNumber == 14) {
+		} else if (this.clauseNumber == 15) {
 			// shoot arrow
 			return cellResult;
-		} else if (this.clauseNumber == 14) {
+		} else if (this.clauseNumber == 16) {
 			// wumpus killed, remove from board
 			return cellResult;
 		}

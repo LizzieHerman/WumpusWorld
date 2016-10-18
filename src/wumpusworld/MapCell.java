@@ -9,11 +9,10 @@ public class MapCell extends Cell{
     private boolean pitFlag;
     private boolean beenHere;
     private boolean safe;
-    private boolean frontier;
-    private int visited;
-    private boolean smell, breeze;
+    private boolean frontier, smell, breeze;
+    private int visited, x, y;
     
-    public MapCell() {
+    public MapCell(int x, int y) {
         super();
         wumpusFlag = false;
         pitFlag = false;
@@ -23,6 +22,8 @@ public class MapCell extends Cell{
         visited = 0;
         smell = false;
         breeze = false;
+        this.x = x;
+        this.y = y;
     }
     
     public boolean get(char c){
@@ -35,6 +36,8 @@ public class MapCell extends Cell{
         if(c == 'b') return beenHere;
         if(c == 'f') return frontier;
         if(c == 's') return safe;
+        if(c == 'l') return smell;
+        if(c == 'z') return breeze;
         return false;
     }
     
@@ -45,6 +48,8 @@ public class MapCell extends Cell{
         if(c == 'b') beenHere = b;
         if(c == 'f') frontier = b;
         if(c == 's') safe = b;
+        if(c == 'l') smell = b;
+        if(c == 'z') breeze = b;
     }
     
     public void set(char c){
@@ -55,10 +60,8 @@ public class MapCell extends Cell{
         return visited;
     }
     
-    public void setSmell(){
-    	this.smell = true;
+    public int[] getCoords(){
+    	int[] coords = new int[]{this.x, this.y};
+    	return coords;
     }
-	public void setBreeze(){
-		this.breeze = true;
-	}
 }

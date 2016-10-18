@@ -14,6 +14,7 @@ public class Explorer {
     int arrows;
     int timesDied;
     WumpusWorld world;
+    int[] agentState;
     
     public Explorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
         x = 0;
@@ -24,6 +25,7 @@ public class Explorer {
         arrows = num;
         timesDied = 0;
         world = w;
+        this.agentState = new int[]{0,0,1};
     }
     
     public void start(){
@@ -142,5 +144,9 @@ public class Explorer {
          * other methods update knowledge
          * infer where to go
         */
+    }
+    
+    public void state(int[] agentState){
+    	this.agentState = agentState;
     }
 }

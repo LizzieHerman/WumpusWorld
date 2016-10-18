@@ -1,5 +1,7 @@
 package wumpusworld;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Lizzie Herman
@@ -8,7 +10,9 @@ package wumpusworld;
 public class FOExplorer extends Explorer {
      Map worldMap;
      int numWump;
-     //Clause[] rules;
+     Clause[] rules;
+     ArrayList<Relation> relations;
+     int[] moveList; //holds 1 for safe, 0 for unsafe for the 4 surrounding cells
     
     public FOExplorer(WumpusWorld w, int n, int num) {
          super(w, n, num);
@@ -16,10 +20,12 @@ public class FOExplorer extends Explorer {
          numWump = num;
          worldMap.setCell(x, y, 'v');
          worldMap.setCell(x, y, 's', true);
-//         rules = new Clause[numRules];
-//         for(int i = 0; i < numRules; i++){
-//        	 rules[i] = new Clause(i);
-//         }
+         rules = new Clause[16];    ////change size to total number of clauses after all have been added to Clause
+         for(int i = 0; i < 16; i++){
+        	 rules[i] = new Clause(i);
+         }
+         relations = new ArrayList<Relation>();
+         moveList = new int[]{1,1,1,1};
     }
     
     public void start(){
@@ -122,5 +128,138 @@ public class FOExplorer extends Explorer {
          * other methods update knowledge
          * infer where to go
         */
+    }
+    
+    //Update cells using clauses
+    public void updateDB(){  //Update loop numbers when all clauses added
+    	int[] result;
+    	
+    	//update cells - clauses 2a-2j
+    	rules[3].condition(agentState, worldMap); //2a
+    	for(int i = 4; i <= 7; i++){ //2b-2e
+    		result = rules[i].condition(agentState, worldMap);
+    		if(result[0] == 1){
+    			char hazard;
+    			if(result[1] == 0){
+    				hazard = 'w';
+    			}else{
+    				hazard = 'p';
+    			}
+    			Relation newRelation = new Relation(worldMap.getSurrounding(agentState[0], agentState[1], agentState[2]), hazard);
+    			relations.add(newRelation);
+    		}
+    	}
+    	for(int i = 8; i <= 13; i++){ //2f-2j
+    		rules[i].condition(agentState, worldMap);
+    	}
+    	
+    	//check relations
+    	boolean valid = true;
+    	if(!relations.isEmpty()){
+	    	for(int i = 0; i < relations.size(); i++){
+	    		valid = relations.get(i).check();
+	    		if(!valid){
+	    			relations.get(i).update();
+	    		}
+	    	}
+    	}
+    	
+    	//check clauses 1a-1c, 3a-3c
+    	for(int i = 0; i <= 2; i++){
+    		result = rules[i].condition(agentState, worldMap);
+    		if(result != null){
+    			moveList[result[0]] = result[1];
+    		}
+    	}
+    	for(int i = 14; i <= 16; i++){
+    		rules[i].condition(agentState, worldMap);
+    	}
+    }
+    
+    //Use info from checking clauses to decide on a move
+    public void findMove(){
+    	int numMoves = 0;
+    	boolean moved = false;
+    	
+    	for(int i = 0; i < moveList.length; i++){
+    		if(moveList[i] == 1){
+    			numMoves++;
+    		}
+    	}
+    	
+    	if(numMoves == 1){ //Move backwards
+    		super.turnRight();
+    		super.turnRight();
+    		super.move();
+    		moved = true;
+    	}
+    	
+    	if(numMoves > 1){ //Move to a frontier cell if there is one
+    		if(moveList[0] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move left
+    			super.turnLeft();
+    			super.move();
+    			moved = true;
+    		}else if(moveList[1] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move up
+    			super.turnLeft();
+    			super.move();
+    			moved = true;
+    		}else if(moveList[2] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move right
+    			super.turnLeft();
+    			super.move();
+    			moved = true;
+    		}
+    		
+    		if(!moved){ //Move towards a relation cell
+    			if(!relations.isEmpty()){
+    				Relation tryToSolve = relations.get(0);
+    				MapCell direction = tryToSolve.getCell();
+    				int[] coords = direction.getCoords();
+    				if(coords[0] < agentState[0]){ //Move in -x direction
+    					super.turnLeft();
+    					super.move();
+    					moved = true;
+    				}else if(coords[0] > agentState[0]){ //Move in +x direction
+    					super.turnRight();
+    					super.move();
+    					moved = true;
+    				}else if(coords[1] < agentState[1]){ //Move in -y direction
+    					super.move();
+    					moved = true;
+    				}else if(coords[1] > agentState[1]){ //Move in +y direction
+    					super.turnRight();
+    					super.turnRight();
+    					super.move();
+    					moved = true;
+    				}
+    			}
+    		}
+    		
+    		if(!moved){ //If still haven't moved, move in any safe direction
+    			int random = (int) Math.random()*4 + 1;
+    			while(!moved){
+	    			if(moveList[random] == 1){
+	    				if(random == 1){ //Move east
+		    				super.turnRight();
+		    				super.move();
+		    				moved = true;
+		    			}else if(random == 2){ //Move south
+		    				super.turnRight();
+		    				super.turnRight();
+		    				super.move();
+		    				moved = true;
+		    			}else if(random == 3){ //Move west
+		    				super.turnLeft();
+		    				super.move();
+		    				moved = true;
+		    			}else if(random == 4){ //Move north
+		    				super.move();
+		    				moved = true;
+		    			}
+	    			}else{
+	    				random = (int) Math.random()*4 + 1;
+	    			}
+    			}
+    		}
+    	}
     }
 }
