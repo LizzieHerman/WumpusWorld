@@ -213,7 +213,7 @@ public class WumpusWorld {
                 }
                 break;
             case 2:
-                for(; y < world.length; y--){ //traveling down the Y axis, decreasing (going South)
+                for(; y >= 0; y--){ //traveling down the Y axis, decreasing (going South)
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
@@ -237,7 +237,7 @@ public class WumpusWorld {
                 }
                 break;
             case 4:
-                for(; y >= 0; y++){ //traveling up the Y axis, increasing. (Going North)
+                 for(; y < world.length; y++){ //traveling up the Y axis, increasing. (Going North)
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
@@ -264,4 +264,3 @@ public class WumpusWorld {
         return false; //you can't pick it up if it's not there.
     }
 }
-
