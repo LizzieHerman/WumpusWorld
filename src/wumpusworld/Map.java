@@ -6,7 +6,7 @@ package wumpusworld;
  *small additions by Ryan Freivalds
  */
 public class Map {
-    private MapCell map[][];
+    MapCell map[][];
     
     public Map(int n){ //generating our X by X grid of MapCells
         map = new MapCell[n][n]; 
@@ -42,37 +42,91 @@ public class Map {
     public MapCell[] getSurrounding(int x, int y, int facing){
     	MapCell[] surrounding = new MapCell[4];
     	
-    	//Add all surrounding cells to array
-    	if(x-1 > 0){ //Check left cell
-    		surrounding[0] = map[x-1][y];
-    	}else{
-    		surrounding[0] = null;
-    	}
-    	if(x+1 < map.length){ //Check right cell
-    		surrounding[2] = map[x+1][y];
-    	}else{
-    		surrounding[2] = null;
-    	}
-    	if(y-1 > 0){ //Check up cell
-    		surrounding[1] = map[x][y-1];
-    	}else{
-    		surrounding[1] = null;
-    	}
-    	if(y+1 < map.length){ //Check down cell
-    		surrounding[3] = map[x][y+1];
-    	}else{
-    		surrounding[3] = null;
-    	}
-    	
-    	//Remove cell behind current facing
-    	if(facing == 1){
-    		surrounding[0] = null;
-    	}else if(facing == 2){
-    		surrounding[1] = null;
-    	}else if(facing == 3){
-    		surrounding[2] = null;
-    	}else{
-    		surrounding[3] = null;
+    	//Add all surrounding cells to array, depending on facing
+    	if(facing == 1){ //Facing east
+    		if(y+1 < map.length){ //Check left cell
+	    		surrounding[0] = map[x][y+1];
+	    	}else{
+	    		surrounding[0] = null;
+	    	}
+	    	if(y-1 > 0){ //Check right cell
+	    		surrounding[2] = map[x][y-1];
+	    	}else{
+	    		surrounding[2] = null;
+	    	}
+	    	if(x+1 < map.length){ //Check forward cell
+	    		surrounding[1] = map[x+1][y];
+	    	}else{
+	    		surrounding[1] = null;
+	    	}
+	    	if(x-1 > 0){ //Check backward cell
+	    		surrounding[3] = map[x-1][y];
+	    	}else{
+	    		surrounding[3] = null;
+	    	}
+    	}else if(facing == 2){ //Facing south
+    		if(x+1 < map.length){ //Check left cell
+	    		surrounding[0] = map[x+1][y];
+	    	}else{
+	    		surrounding[0] = null;
+	    	}
+	    	if(x-1 > 0){ //Check right cell
+	    		surrounding[2] = map[x-1][y];
+	    	}else{
+	    		surrounding[2] = null;
+	    	}
+	    	if(y-1 > 0){ //Check forward cell
+	    		surrounding[1] = map[x][y-1];
+	    	}else{
+	    		surrounding[1] = null;
+	    	}
+	    	if(y+1 < map.length){ //Check backward cell
+	    		surrounding[3] = map[x][y+1];
+	    	}else{
+	    		surrounding[3] = null;
+	    	}
+    	}else if(facing == 3){ //Facing west
+    		if(y-1 > 0){ //Check left cell
+	    		surrounding[0] = map[x][y-1];
+	    	}else{
+	    		surrounding[0] = null;
+	    	}
+	    	if(y+1 < map.length){ //Check right cell
+	    		surrounding[2] = map[x][y+1];
+	    	}else{
+	    		surrounding[2] = null;
+	    	}
+	    	if(x-1 > 0){ //Check forward cell
+	    		surrounding[1] = map[x-1][y];
+	    	}else{
+	    		surrounding[1] = null;
+	    	}
+	    	if(x+1 > 0){ //Check backward cell
+	    		surrounding[3] = map[x+1][y];
+	    	}else{
+	    		surrounding[3] = null;
+	    	}
+    	}else{ //Facing north
+	    	if(x-1 > 0){ //Check left cell
+	    		surrounding[0] = map[x-1][y];
+	    	}else{
+	    		surrounding[0] = null;
+	    	}
+	    	if(x+1 < map.length){ //Check right cell
+	    		surrounding[2] = map[x+1][y];
+	    	}else{
+	    		surrounding[2] = null;
+	    	}
+	    	if(y+1 < map.length){ //Check forward cell
+	    		surrounding[1] = map[x][y+1];
+	    	}else{
+	    		surrounding[1] = null;
+	    	}
+	    	if(y-1 > 0){ //Check backward cell
+	    		surrounding[3] = map[x][y-1];
+	    	}else{
+	    		surrounding[3] = null;
+	    	}
     	}
     	
     	return surrounding;

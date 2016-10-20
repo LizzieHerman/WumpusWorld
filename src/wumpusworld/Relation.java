@@ -13,8 +13,11 @@ public class Relation{
 	
 	public Relation(MapCell[] related, char hazard) {
 		this.hazard = hazard;
+		this.related = new ArrayList<MapCell>();
 		for(int i = 0; i < related.length ; i++){
-			this.related.add(related[i]);
+			if(related[i] != null){
+				this.related.add(related[i]);
+			}
 		}
 	}
 	
@@ -48,5 +51,13 @@ public class Relation{
 	
 	public MapCell getCell(){
 		return related.get(0);
+	}
+	
+	public ArrayList<MapCell> getRelated(){
+		return this.related;
+	}
+	
+	public char getHazard(){
+		return this.hazard;
 	}
 }

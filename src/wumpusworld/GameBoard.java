@@ -11,27 +11,29 @@ package wumpusworld;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class GameBoard extends JFrame {
     GridLayout boardLayout;
+    JPanel board;
     int[] stat = {0, 0, 0, 0, 0, 0, 0, 0};
     Component[][] grid;
         
     Container explorer1, explorer2, explorer3, explorer4, arrow1, arrow2, arrow3, arrow4, 
             wumpus, deadwumpus, obstacle, pit, gold, inGold, inWumpus, inPit, empty;
     
-    public GameBoard(int wump, String[][] world){
+    public GameBoard(int wump, String[][] world, Cell[][] actualWorld){
         // the board will include an indexing of the board spaces
         boardLayout = new GridLayout(world.length+1, world.length+1);
         stat[1] = wump;
         grid = new Container[world.length+1][world.length+1];
-        makeGrid(world);
+        makeGrid(world, actualWorld);
         initPanels();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Game Board");
     }
     
-    private void makeGrid(String[][] world){
+    private void makeGrid(String[][] world, Cell[][] actualWorld){
         for(int i = 0; i < grid.length; i++){
             for(int j = 0; j < grid.length; j++){
                 int x = i-1; int y = j-1;
@@ -44,17 +46,21 @@ public class GameBoard extends JFrame {
                 }else{
                     String inCell = world[x][y];
                     if(inCell.isEmpty() || inCell.equalsIgnoreCase("empty")){
-                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/empty.png")));
+                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/empty.png")));
                     }else if(inCell.equalsIgnoreCase("explorer")){
-                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/explorer1.png")));
+                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/explorer1.png")));
                     }else if(inCell.equalsIgnoreCase("wumpus")){
-                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/wumpus.png")));
+                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/wumpus.png")));
                     }else if(inCell.equalsIgnoreCase("pit")){
-                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/pit.png")));
+                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/pit.png")));
                     }else if(inCell.equalsIgnoreCase("gold")){
-                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/gold.png")));
+                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/gold.png")));
                     }else if(inCell.equalsIgnoreCase("wall")){
-                        grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/wall.png")));
+                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/wall.png")));
+                    }
+                    
+                    if(i <= actualWorld.length && j <= actualWorld.length){
+                    	grid[i][j] = new JLabel(actualWorld[i-1][j-1].getDisplay());
                     }
                 }
             }
@@ -63,7 +69,7 @@ public class GameBoard extends JFrame {
     
     private void initPanels(){
         //make board
-        JPanel board = new JPanel();
+        board = new JPanel();
         board.setLayout(boardLayout);
         for(int j = grid.length-1; j >= 0; j--){
             for(int i = 0; i < grid.length; i++){
@@ -109,6 +115,11 @@ public class GameBoard extends JFrame {
         this.add(board, BorderLayout.NORTH);
         this.add(new JSeparator(), BorderLayout.CENTER);
         this.add(stats, BorderLayout.SOUTH);
+    }
+    
+    public void updateUI(){
+    	board.revalidate();
+    	board.repaint();
     }
     
     private JButton next = new JButton("Next Move");

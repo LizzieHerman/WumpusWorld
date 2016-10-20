@@ -7,8 +7,9 @@ import java.util.Random;
  * Really small additions by Ryan Freivalds
  */
 public class WumpusWorld {
-    private Cell world[][];
+     Cell world[][];
     private Explorer agent;
+    GameBoard board;
     private int[] agentState = { 0, 0, 1};// = { 0, 0, 1}; //represents the agent's X location, Y location, and current facing, respectively.
     //Direction is 1 for "East," 2 for "South," 3 for "West," and 4 for "North."
     
@@ -32,15 +33,45 @@ public class WumpusWorld {
                 if(i == 0 && j == 0){
                     grid[i][j] = "explorer";
                     world[i][j].set('e', true); //placing the player
+                    world[i][j].setDisplay("E");
                 }else if(rand.nextDouble() < pWumpus){ //otherwise seeing if we want to generate a Wumpus, Pit, or wall...
                     world[i][j].set('w', true);
+                    world[i][j].setDisplay("W");
                     grid[i][j] = "wumpus";
                     numWumpus++; //So we know how many arrows we take with us.
+                    //Set smell in surrounding cells
+                    if(i-1 >= 0){
+                    	world[i-1][j].set('l', true);
+                    }
+                    if(i+1 < world.length){
+                    	world[i+1][j].set('l', true);
+                    }
+                    if(j-1 >= 0){
+                    	world[i][j-1].set('l', true);
+                    }
+                    if(j+1 < world.length){
+                    	world[i][j+1].set('l', true);
+                    }
                 }else if(rand.nextDouble() < pPit){
                     world[i][j].set('p', true);
+                    world[i][j].setDisplay("P");
                     grid[i][j] = "pit";
+                    //Set breeze in surrounding cells
+                    if(i-1 >= 0){
+                    	world[i-1][j].set('z', true);
+                    }
+                    if(i+1 < world.length){
+                    	world[i+1][j].set('z', true);
+                    }
+                    if(j-1 >= 0){
+                    	world[i][j-1].set('z', true);
+                    }
+                    if(j+1 < world.length){
+                    	world[i][j+1].set('z', true);
+                    }
                 }else if(rand.nextDouble() < pObstacle){
                     world[i][j].set('o', true);
+                    world[i][j].setDisplay("O");
                     grid[i][j] = "wall";
                 }
                 else{ //or just leave it empty.
@@ -51,11 +82,18 @@ public class WumpusWorld {
             }
         }
         int gold = empty[rand.nextInt(numEmpty)]; // get random empty cell 
-        if(gold < 100) world[0][gold%100].set('g', true);
-        else world[gold/100][gold%100].set('g', true);
-        //GameBoard board = new GameBoard(numWumpus, grid);
-        //board.pack();
-        //board.setVisible(true);
+        if(gold < 100){
+        	world[0][gold%100].set('g', true);
+        	world[0][gold%100].setDisplay("G");
+        	grid[0][gold%100] = "gold";
+        }else {
+        	world[gold/100][gold%100].set('g', true);
+        	world[gold/100][gold%100].setDisplay("G");
+        	grid[gold/100][gold%100] = "gold";
+        }
+        board = new GameBoard(numWumpus, grid, world);
+        board.pack();
+        board.setVisible(true);
         return numWumpus;
     }
     
@@ -73,7 +111,7 @@ public class WumpusWorld {
         return world[x][y]; //otherwise return that cell.
     }
     
-    public boolean[] senseCell(int x, int y){  //may change this section from a sequence of checks to a cell intrinsic. 
+    public boolean[] senseCell(int x, int y){ 
         boolean stench = false;
         boolean breeze = false;
         boolean gold = false;
@@ -175,7 +213,7 @@ public class WumpusWorld {
                 }
                 break;
             case 2:
-                for(; y >= 0; y--){ //traveling down the Y axis, decreasing (going South)
+                for(; y < world.length; y--){ //traveling down the Y axis, decreasing (going South)
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
@@ -199,7 +237,7 @@ public class WumpusWorld {
                 }
                 break;
             case 4:
-                for(; y < world.length; y++){ //traveling up the Y axis, increasing. (Going North)
+                for(; y >= 0; y++){ //traveling up the Y axis, increasing. (Going North)
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;

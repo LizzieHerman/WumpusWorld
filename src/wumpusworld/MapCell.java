@@ -9,7 +9,7 @@ public class MapCell extends Cell{
     private boolean pitFlag;
     private boolean beenHere;
     private boolean safe;
-    private boolean frontier, smell, breeze;
+    private boolean frontier, smell, breeze, glitter, obstacleFlag;
     private int visited, x, y;
     
     public MapCell(int x, int y) {
@@ -20,24 +20,27 @@ public class MapCell extends Cell{
         safe = false;
         frontier = true;
         visited = 0;
-        smell = false;
-        breeze = false;
+        this.smell = super.smell;
+        this.breeze = super.breeze;
+        this.obstacleFlag = false;
         this.x = x;
         this.y = y;
     }
     
     public boolean get(char c){
-        if(c == 'w') return wumpus;
-        if(c == 'p') return pit;
-        if(c == 'o') return obstacle;
-        if(c == 'g') return gold;
+        if(c == 'w') return super.wumpus;
+        if(c == 'p') return super.pit;
+        if(c == 'o') return super.obstacle;
+        if(c == 'g') return super.gold;
         if(c == 'u') return wumpusFlag;
         if(c == 'i') return pitFlag;
         if(c == 'b') return beenHere;
         if(c == 'f') return frontier;
         if(c == 's') return safe;
-        if(c == 'l') return smell;
-        if(c == 'z') return breeze;
+        if(c == 'l') return this.smell;
+        if(c == 'z') return this.breeze;
+        if(c == 't') return glitter;
+        if(c == 'c') return this.obstacleFlag;
         return false;
     }
     
@@ -50,6 +53,10 @@ public class MapCell extends Cell{
         if(c == 's') safe = b;
         if(c == 'l') smell = b;
         if(c == 'z') breeze = b;
+        if(c == 't') glitter = b;
+        if(c == 'w') super.wumpus = b;
+        if(c == 'p') super.pit = b;
+        if(c == 'c') this.obstacleFlag = b;
     }
     
     public void set(char c){

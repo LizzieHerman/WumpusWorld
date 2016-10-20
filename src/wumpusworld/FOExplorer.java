@@ -13,10 +13,22 @@ public class FOExplorer extends Explorer {
      Clause[] rules;
      ArrayList<Relation> relations;
      int[] moveList; //holds 1 for safe, 0 for unsafe for the 4 surrounding cells
+     boolean gameWon;
     
     public FOExplorer(WumpusWorld w, int n, int num) {
          super(w, n, num);
          worldMap = new Map(n);
+         for(int i = 0; i < worldMap.map.length; i++){
+        	 for(int j = 0; j < worldMap.map.length; j++){
+        		 worldMap.map[i][j].setDisplay(w.world[i][j].getDisplay());
+        		 if(w.world[i][j].get('l')){
+        			 worldMap.map[i][j].set('l', true); //set smell in mapcell if cell has smell
+        		 }
+        		 if(w.world[i][j].get('z')){
+        			 worldMap.map[i][j].set('z', true); //set breeze in mapcell if cell has breeze
+        		 }
+        	 }
+         }
          numWump = num;
          worldMap.setCell(x, y, 'v');
          worldMap.setCell(x, y, 's', true);
@@ -26,13 +38,12 @@ public class FOExplorer extends Explorer {
          }
          relations = new ArrayList<Relation>();
          moveList = new int[]{1,1,1,1};
+         this.gameWon = false;
     }
     
     public void start(){
-        boolean[] senses = world.senseCell(x,y);
-        while (senses[2] != true){
+        updateDB();
         findMove();
-        }
     }
     
     // return whether able to shoot arrow
@@ -52,111 +63,121 @@ public class FOExplorer extends Explorer {
         }
         x = x1;
         y = y1;
+        System.out.println("FO feelbump.");
     }
     
     public void grabGold(){
         if(world.removeGold()){
             cost += 1000;
             // how to end game
+            gameWon = true;
             System.out.print("You won");
         }
     }
     
-    public void smellStench(){
-        // we want cells (x+1,y), (x,y+1), (x-1,y), (x,y-1)
-        if(x+1 < worldMap.size()){
-            worldMap.setCell(x+1, y, 'u', true);
-        }
-        if(y+1 < worldMap.size()){
-            worldMap.setCell(x, y+1, 'u', true);
-        }
-        if(x-1 >= 0){
-            worldMap.setCell(x-1, y, 'u', true);
-        }
-        if(y-1 >= 0){
-            worldMap.setCell(x, y-1, 'u', true);
-        }
-    }
-    
-    public void feelBreeze(){
-        // we want cells (x+1,y), (x,y+1), (x-1,y), (x,y-1)
-        if(x+1 < worldMap.size()){
-            worldMap.setCell(x+1, y, 'i', true);
-        }
-        if(y+1 < worldMap.size()){
-            worldMap.setCell(x, y+1, 'i', true);
-        }
-        if(x-1 >= 0){
-            worldMap.setCell(x-1, y, 'i', true);
-        }
-        if(y-1 >= 0){
-            worldMap.setCell(x, y-1, 'i', true);
-        }
-    }
-    
-    public void getPercepts(){
-        boolean senses[] = world.senseCell(x, y);
-        // if don't smell stench or feel breeze then surrounding cells are safe
-        if(!(senses[0] || senses[1])){
-            if(x+1 < worldMap.size()){
-                worldMap.setCell(x+1, y, 's', true);
-                worldMap.setCell(x+1, y, 'u', false);
-                worldMap.setCell(x+1, y, 'i', false);
-            }
-            if(y+1 < worldMap.size()){
-                worldMap.setCell(x, y+1, 's', true);
-                worldMap.setCell(x, y+1, 'u', false);
-                worldMap.setCell(x, y+1, 'i', false);
-            }
-            if(x-1 >= 0){
-                worldMap.setCell(x-1, y, 's', true);
-                worldMap.setCell(x-1, y, 'u', false);
-                worldMap.setCell(x-1, y, 'i', false);
-            }
-            if(y-1 >= 0){
-                worldMap.setCell(x, y-1, 's', true);
-                worldMap.setCell(x, y-1, 'u', false);
-                worldMap.setCell(x, y-1, 'i', false);
-            }
-        }
-        // if there is no gold in cell and you did not die in cell then cell is safe
-        if(senses[2]) grabGold();
-        else {
-            worldMap.setCell(x, y, 's', true);
-            worldMap.setCell(x, y, 'u', false);
-            worldMap.setCell(x, y, 'i', false);
-        }
-        /*
-         * TO-DO
-         * other methods update knowledge
-         * infer where to go
-        */
-    }
+//    public void smellStench(){
+//        // we want cells (x+1,y), (x,y+1), (x-1,y), (x,y-1)
+//        if(x+1 < worldMap.size()){
+//            worldMap.setCell(x+1, y, 'u', true);
+//        }
+//        if(y+1 < worldMap.size()){
+//            worldMap.setCell(x, y+1, 'u', true);
+//        }
+//        if(x-1 >= 0){
+//            worldMap.setCell(x-1, y, 'u', true);
+//        }
+//        if(y-1 >= 0){
+//            worldMap.setCell(x, y-1, 'u', true);
+//        }
+//    }
+//    
+//    public void feelBreeze(){
+//        // we want cells (x+1,y), (x,y+1), (x-1,y), (x,y-1)
+//        if(x+1 < worldMap.size()){
+//            worldMap.setCell(x+1, y, 'i', true);
+//        }
+//        if(y+1 < worldMap.size()){
+//            worldMap.setCell(x, y+1, 'i', true);
+//        }
+//        if(x-1 >= 0){
+//            worldMap.setCell(x-1, y, 'i', true);
+//        }
+//        if(y-1 >= 0){
+//            worldMap.setCell(x, y-1, 'i', true);
+//        }
+//    }
+//    
+//    public void getPercepts(){
+//        boolean senses[] = world.senseCell(x, y);
+//        // if don't smell stench or feel breeze then surrounding cells are safe
+//        if(!(senses[0] || senses[1])){
+//            if(x+1 < worldMap.size()){
+//                worldMap.setCell(x+1, y, 's', true);
+//                worldMap.setCell(x+1, y, 'u', false);
+//                worldMap.setCell(x+1, y, 'i', false);
+//            }
+//            if(y+1 < worldMap.size()){
+//                worldMap.setCell(x, y+1, 's', true);
+//                worldMap.setCell(x, y+1, 'u', false);
+//                worldMap.setCell(x, y+1, 'i', false);
+//            }
+//            if(x-1 >= 0){
+//                worldMap.setCell(x-1, y, 's', true);
+//                worldMap.setCell(x-1, y, 'u', false);
+//                worldMap.setCell(x-1, y, 'i', false);
+//            }
+//            if(y-1 >= 0){
+//                worldMap.setCell(x, y-1, 's', true);
+//                worldMap.setCell(x, y-1, 'u', false);
+//                worldMap.setCell(x, y-1, 'i', false);
+//            }
+//        }
+//        // if there is no gold in cell and you did not die in cell then cell is safe
+//        if(senses[2]) grabGold();
+//        else {
+//            worldMap.setCell(x, y, 's', true);
+//            worldMap.setCell(x, y, 'u', false);
+//            worldMap.setCell(x, y, 'i', false);
+//        }
+//        /*
+//         * TO-DO
+//         * other methods update knowledge
+//         * infer where to go
+//        */
+//    }
     
     //Update cells using clauses
-    public void updateDB(){  //Update loop numbers when all clauses added
+    public void updateDB(){  ////////////////////////////////////Update loop numbers when all clauses added
     	int[] result;
+    	boolean bump = false;
     	
-    	//update cells - clauses 2a-2j
-    	rules[3].condition(agentState, worldMap); //2a
-    	for(int i = 4; i <= 7; i++){ //2b-2e
-    		result = rules[i].condition(agentState, worldMap);
+    	//update cells - clauses 2a-2f
+    	result = rules[3].checkClause(agentState, worldMap); //2a
+    	if(result[0] == 1){
+    		super.grabGold();
+    	}
+//    	result = rules[4].checkClause(agentState, worldMap); //2b
+//    	if(result[0] == 1){
+//    		bump = true;
+//    	}
+    	
+    	
+    	for(int i = 5; i <= 8; i++){ //2b-2f
+    		result = rules[i].checkClause(agentState, worldMap);
     		if(result[0] == 1){
     			char hazard;
     			if(result[1] == 0){
-    				hazard = 'w';
+    				hazard = 'u';
     			}else{
-    				hazard = 'p';
+    				hazard = 'i';
     			}
+    			//Add new relation
     			Relation newRelation = new Relation(worldMap.getSurrounding(agentState[0], agentState[1], agentState[2]), hazard);
     			relations.add(newRelation);
     		}
     	}
-    	for(int i = 8; i <= 13; i++){ //2f-2j
-    		rules[i].condition(agentState, worldMap);
-    	}
     	
-    	//check relations
+    	//update relations
     	boolean valid = true;
     	if(!relations.isEmpty()){
 	    	for(int i = 0; i < relations.size(); i++){
@@ -167,24 +188,59 @@ public class FOExplorer extends Explorer {
 	    	}
     	}
     	
-    	//check clauses 1a-1c, 3a-3c
-    	for(int i = 0; i <= 2; i++){
-    		result = rules[i].condition(agentState, worldMap);
-    		if(result != null){
-    			moveList[result[0]] = result[1];
+    	//Check for confirmed wumpus in a surrounding cell, if true shoot arrow, listen for scream, if scream remove relation from list
+    	result = rules[9].checkClause(agentState, worldMap); //2g
+    	if(result[0] == 1){
+    		for(int i = 0; i < relations.size(); i++){
+    			if(relations.get(i).getRelated().size() == 1){
+    				if(relations.get(i).getHazard() == 'w'){
+    					if(relations.get(i).getCell().get('w')){
+							if(result[1] == 0){ //wumpus is in left cell
+								super.turnLeft();
+							}else if(result[1] == 2){ //wumpus is in right cell
+								super.turnRight();
+							}
+    						super.shootArrow();
+    						if(result[1] == 0){ //return to previous facing
+								super.turnRight();
+							}else if(result[1] == 2){ //return to previous facing
+								super.turnLeft();
+							}
+    						boolean dead = super.wumpusKilled();
+    						if(dead){
+    							result = rules[10].checkClause(agentState, worldMap); //2h
+    							relations.remove(i);
+    						}
+    					}
+    				}
+    			}
     		}
     	}
-    	for(int i = 14; i <= 16; i++){
-    		rules[i].condition(agentState, worldMap);
-    	}
+    	
+    	//Mark safe cells surrounding current cell, do after rules check
+    	rules[11].checkClause(agentState, worldMap); //2i
     }
     
     //Use info from checking clauses to decide on a move
     public void findMove(){
     	int numMoves = 0;
     	boolean moved = false;
-    	System.out.println("Current position is (" + x + "," + y + ")"); //testline
-        
+    	
+    	System.out.println("current: " + agentState[0] + ", " + agentState[1]);
+    	
+    	MapCell[] surrounding = worldMap.getSurrounding(agentState[0], agentState[1], agentState[2]);
+    	for(int i = 0; i < surrounding.length; i++){
+    		if(surrounding[i] != null){
+    			if(surrounding[i].get('s')){
+    				moveList[i] = 1;
+    			}else{
+    				moveList[i] = 0;
+    			}
+    		}else{
+    			moveList[i] = 0;
+    		}
+    	}
+    	
     	for(int i = 0; i < moveList.length; i++){
     		if(moveList[i] == 1){
     			numMoves++;
@@ -192,56 +248,70 @@ public class FOExplorer extends Explorer {
     	}
     	
     	if(numMoves == 1){ //Move backwards
-                System.out.println("Moving backwards."); //testline
     		super.turnRight();
     		super.turnRight();
     		super.move();
     		moved = true;
+    		System.out.println("Moving backwards.");
     	}
     	
     	if(numMoves > 1){ //Move to a frontier cell if there is one
     		if(moveList[0] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move left
-                        System.out.println("Moving left seeking fontier cell.");
     			super.turnLeft();
     			super.move();
     			moved = true;
+    			System.out.println("Moving left.");
     		}else if(moveList[1] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move up
-                        System.out.println("Moving forward seeking fontier cell.");
-    			super.turnLeft(); //This need to be here to just move up?
+    			super.turnLeft();
     			super.move();
     			moved = true;
+    			System.out.println("Moving forward.");
     		}else if(moveList[2] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move right
-                      System.out.println("Moving right seeking fontier cell.");
-            		super.turnRight();  //replaced this with turn right -Ryan
+    			super.turnLeft();
     			super.move();
     			moved = true;
+    			System.out.println("Moving right.");
     		}
     		
-    		if(!moved){ //Move towards a relation cell
+    		if(!moved){ //Move towards a relation cell, or a confirmed wumpus
     			if(!relations.isEmpty()){
-    				Relation tryToSolve = relations.get(0);
-    				MapCell direction = tryToSolve.getCell();
-    				int[] coords = direction.getCoords();
-    				if(coords[0] < agentState[0]){ //Move in -x direction
-                                        System.out.println("Moving West seeking relation cell.");
-    					super.turnLeft();
-    					super.move();
-    					moved = true;
-    				}else if(coords[0] > agentState[0]){ //Move in +x direction
-                                        System.out.println("Moving East seeking relation cell.");
-    					super.turnRight();
-    					super.move();
-    					moved = true;
-    				}else if(coords[1] < agentState[1]){ //Move in -y direction
-                                        System.out.println("Moving South seeking relation cell.");
-    					super.move();
-    					moved = true;
-    				}else if(coords[1] > agentState[1]){ //Move in +y direction
-                                        System.out.println("Moving North seeking relation cell.");
-    					super.turnRight();
-    					super.turnRight();
-    					super.move();
-    					moved = true;
+    				MapCell direction;
+    				int[] coords = null;
+    				for(int i = 0; i < relations.size(); i++){
+    					if(relations.get(i).getRelated().size() != 1){
+    						direction = relations.get(0).getCell();
+    						coords = direction.getCoords();
+    						break;
+    					}else{
+    						if(relations.get(i).getHazard() == 'w'){
+    							direction = relations.get(0).getCell();
+    							coords = direction.getCoords();
+    						}
+    					}
+    				}
+    				
+    				if(coords != null){
+	    				if(coords[0] < agentState[0]){ //Move in -x direction
+	    					super.turnLeft();
+	    					super.move();
+	    					moved = true;
+	    					System.out.println("Moving -x.");
+	    				}else if(coords[0] > agentState[0]){ //Move in +x direction
+	    					super.turnRight();
+	    					super.move();
+	    					moved = true;
+	    					System.out.println("Moving +x.");
+	    				}else if(coords[1] < agentState[1]){ //Move in -y direction
+	    					super.move();
+	    					moved = true;
+	    					System.out.println("Moving -y.");
+	    				}else if(coords[1] > agentState[1]){ //Move in +y direction
+	    					super.turnRight();
+	    					super.turnRight();
+	    					super.move();
+	    					moved = true;
+	    					System.out.println("Moving +y.");
+	    				}
     				}
     			}
     		}
@@ -251,28 +321,27 @@ public class FOExplorer extends Explorer {
     			while(!moved){
 	    			if(moveList[random] == 1){
 	    				if(random == 1){ //Move east
-                                                System.out.println("Moving East to safe cell.");
 		    				super.turnRight();
 		    				super.move();
 		    				moved = true;
+		    				System.out.println("Moving east.");
 		    			}else if(random == 2){ //Move south
-                                                System.out.println("Moving South to safe cell.");
 		    				super.turnRight();
 		    				super.turnRight();
 		    				super.move();
 		    				moved = true;
+		    				System.out.println("Moving south.");
 		    			}else if(random == 3){ //Move west
-                                                System.out.println("Moving West to safe cell.");
 		    				super.turnLeft();
 		    				super.move();
 		    				moved = true;
+		    				System.out.println("Moving west.");
 		    			}else if(random == 4){ //Move north
-                                                System.out.println("Moving North to safe cell.");
 		    				super.move();
 		    				moved = true;
+		    				System.out.println("Moving north.");
 		    			}
 	    			}else{
-                                        System.out.println("I'm freaking lost.");
 	    				random = (int) Math.random()*4 + 1;
 	    			}
     			}
