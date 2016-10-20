@@ -2,7 +2,7 @@ package wumpusworld;
 
 /**
  *
- * @author Lizzie Herman
+ * @author Lizzie Herman, Greg Neznanski
  *Some really small additions by Ryan Freivalds
  */
 public class Explorer {
@@ -15,7 +15,8 @@ public class Explorer {
     int timesDied;
     WumpusWorld world;
     int[] agentState;
-    private boolean wumpusKilled, gameWon;
+    private boolean wumpusKilled;
+    boolean gameWon;
     
     public Explorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
         x = 0;
@@ -99,7 +100,6 @@ public class Explorer {
         x = x1;
         y = y1;
         System.out.print("You died");
-        // add wumpus/ pit to knowledge base
     }
     
     public void seeGlitter(){

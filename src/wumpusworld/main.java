@@ -2,7 +2,7 @@ package wumpusworld;
 
 /**
  *
- * @author Lizzie Herman
+ * @author Lizzie Herman, Greg Neznanski
  */
 public class main {
     public static void main(String[] args) {
@@ -12,11 +12,11 @@ public class main {
             Explorer agent = new FOExplorer(world, i, numWump);
             world.setExplorer(agent);
             
-
+            System.out.println("Starting game size: " + i);
             while(!agent.checkWin()){
             	agent.start();
-            	world.board.updateUI();
-            	System.out.println("looping");
+            	//world.board.updateUI();
+            	//System.out.println("looping");
             }
         }
     }

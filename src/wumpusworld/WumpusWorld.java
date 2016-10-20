@@ -3,7 +3,7 @@ package wumpusworld;
 import java.util.Random;
 /**
  *
- * @author Lizzie Herman
+ * @author Lizzie Herman, Greg Neznanski
  * Really small additions by Ryan Freivalds
  */
 public class WumpusWorld {

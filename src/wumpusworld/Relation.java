@@ -24,11 +24,11 @@ public class Relation{
 	public boolean check(){
 		boolean valid = true;
 		
-		if(this.hazard == 'w'){
+		if(this.hazard == 'u'){
 			for(int i = 0; i < related.size(); i++){
 				if(!this.related.get(i).get('u')) valid = false;
 			}
-		}else if(this.hazard == 'p'){
+		}else if(this.hazard == 'i'){
 			for(int i = 0; i < related.size(); i++){
 				if(!this.related.get(i).get('i')) valid = false;
 			}
@@ -38,11 +38,11 @@ public class Relation{
 	}
 	
 	public void update(){
-		if(this.hazard == 'w'){
+		if(this.hazard == 'u'){
 			for(int i = 0; i < related.size(); i++){
 				if(!this.related.get(i).get('u'))related.remove(i);
 			}
-		}else if(this.hazard == 'p'){
+		}else if(this.hazard == 'i'){
 			for(int i = 0; i < related.size(); i++){
 				if(!this.related.get(i).get('i')) related.remove(i);
 			}

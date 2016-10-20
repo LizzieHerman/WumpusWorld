@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Lizzie Herman
+ * @author Lizzie Herman, Greg Neznanski
  *Some really small additions by Ryan Freivalds
  */
 public class FOExplorer extends Explorer {
@@ -13,7 +13,8 @@ public class FOExplorer extends Explorer {
      Clause[] rules;
      ArrayList<Relation> relations;
      int[] moveList; //holds 1 for safe, 0 for unsafe for the 4 surrounding cells
-     boolean gameWon;
+     boolean gameWon, noMoves;
+     private int[] moveCoords;
     
     public FOExplorer(WumpusWorld w, int n, int num) {
          super(w, n, num);
@@ -39,6 +40,8 @@ public class FOExplorer extends Explorer {
          relations = new ArrayList<Relation>();
          moveList = new int[]{1,1,1,1};
          this.gameWon = false;
+         this.noMoves = false;
+         moveCoords = new int[3];
     }
     
     public void start(){
@@ -61,9 +64,11 @@ public class FOExplorer extends Explorer {
         if(x < worldMap.size() && y < worldMap.size() && x >= 0 && y >= 0){ // test to see if we hit wall or obstacle
             worldMap.setCell(x, y, 'o', true);
         }
+        worldMap.getCell(moveCoords[0], moveCoords[1]).set('c', true);
         x = x1;
         y = y1;
-        System.out.println("FO feelbump.");
+        
+        System.out.println("Walked into a wall.");
     }
     
     public void grabGold(){
@@ -73,6 +78,15 @@ public class FOExplorer extends Explorer {
             gameWon = true;
             System.out.print("You won");
         }
+    }
+    
+    public void die(int x1, int y1, boolean wumpus){
+    	super.die(x1, y1, wumpus);
+    	if(wumpus){
+    		worldMap.getCell(moveCoords[0], moveCoords[1]).set('w', true);
+    	}else{
+    		worldMap.getCell(moveCoords[0], moveCoords[1]).set('p', true);
+    	}
     }
     
 //    public void smellStench(){
@@ -226,7 +240,7 @@ public class FOExplorer extends Explorer {
     	int numMoves = 0;
     	boolean moved = false;
     	
-    	System.out.println("current: " + agentState[0] + ", " + agentState[1]);
+    	System.out.println("current: " + agentState[0] + ", " + agentState[1] + " - facing: " + agentState[2]);
     	
     	MapCell[] surrounding = worldMap.getSurrounding(agentState[0], agentState[1], agentState[2]);
     	for(int i = 0; i < surrounding.length; i++){
@@ -247,7 +261,18 @@ public class FOExplorer extends Explorer {
     		}
     	}
     	
+    	if(numMoves == 0){
+    		//Need something here for taking a risk
+    		System.out.println("No valid moves.");
+    		//noMoves = true;
+    		super.gameWon = true;
+    		return;
+    	}
+    	
     	if(numMoves == 1){ //Move backwards
+    		moveCoords[0] = agentState[0];
+    		moveCoords[1] = agentState[1];
+    		moveCoords[2] = agentState[2];
     		super.turnRight();
     		super.turnRight();
     		super.move();
@@ -256,17 +281,29 @@ public class FOExplorer extends Explorer {
     	}
     	
     	if(numMoves > 1){ //Move to a frontier cell if there is one
-    		if(moveList[0] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move left
+    		int[] coordsLeft = surrounding[0].getCoords();
+    		int[] coordsFront = surrounding[1].getCoords();
+    		int[] coordsRight = surrounding[2].getCoords();
+    		if(moveList[0] == 1 && worldMap.getCell(coordsLeft[0], coordsLeft[1]).get('f')){ //Move left
+    			moveCoords[0] = coordsLeft[0];
+    			moveCoords[1] = coordsLeft[1];
+    			moveCoords[2] = agentState[2];
     			super.turnLeft();
     			super.move();
     			moved = true;
     			System.out.println("Moving left.");
-    		}else if(moveList[1] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move up
+    		}else if(moveList[1] == 1 && worldMap.getCell(coordsFront[0], coordsFront[1]).get('f')){ //Move up
+    			moveCoords[0] = coordsFront[0];
+    			moveCoords[1] = coordsFront[1];
+    			moveCoords[2] = agentState[2];
     			super.turnLeft();
     			super.move();
     			moved = true;
     			System.out.println("Moving forward.");
-    		}else if(moveList[2] == 1 && worldMap.getCell(agentState[0], agentState[1]).get('f')){ //Move right
+    		}else if(moveList[2] == 1 && worldMap.getCell(coordsRight[0], coordsRight[1]).get('f')){ //Move right
+    			moveCoords[0] = coordsRight[0];
+    			moveCoords[1] = coordsRight[1];
+    			moveCoords[2] = agentState[2];
     			super.turnLeft();
     			super.move();
     			moved = true;
@@ -290,24 +327,36 @@ public class FOExplorer extends Explorer {
     					}
     				}
     				
-    				if(coords != null){
+    				if(coords != null){  ////////The move directions are still wrong here i think
 	    				if(coords[0] < agentState[0]){ //Move in -x direction
+	    					moveCoords[0] = coords[0];
+	    	    			moveCoords[1] = coords[1];
 	    					super.turnLeft();
+	    					moveCoords[2] = agentState[2];
 	    					super.move();
 	    					moved = true;
 	    					System.out.println("Moving -x.");
 	    				}else if(coords[0] > agentState[0]){ //Move in +x direction
+	    					moveCoords[0] = coords[0];
+	    	    			moveCoords[1] = coords[1];
 	    					super.turnRight();
+	    					moveCoords[2] = agentState[2];
 	    					super.move();
 	    					moved = true;
 	    					System.out.println("Moving +x.");
 	    				}else if(coords[1] < agentState[1]){ //Move in -y direction
+	    					moveCoords[0] = coords[0];
+	    	    			moveCoords[1] = coords[1];
+	    	    			moveCoords[2] = agentState[2];
 	    					super.move();
 	    					moved = true;
 	    					System.out.println("Moving -y.");
 	    				}else if(coords[1] > agentState[1]){ //Move in +y direction
+	    					moveCoords[0] = coords[0];
+	    	    			moveCoords[1] = coords[1];
 	    					super.turnRight();
 	    					super.turnRight();
+	    					moveCoords[2] = agentState[2];
 	    					super.move();
 	    					moved = true;
 	    					System.out.println("Moving +y.");
@@ -319,9 +368,10 @@ public class FOExplorer extends Explorer {
     		if(!moved){ //If still haven't moved, move in any safe direction
     			int random = (int) Math.random()*4 + 1;
     			while(!moved){
-	    			if(moveList[random] == 1){
+	    			if(moveList[random] == 1){   //////////need a check for safe direction, also move directions are still wrong i think
 	    				if(random == 1){ //Move east
-		    				super.turnRight();
+	    					super.turnRight();
+		    				moveCoords[2] = agentState[2];
 		    				super.move();
 		    				moved = true;
 		    				System.out.println("Moving east.");

@@ -296,9 +296,9 @@ public class Clause {
 						if(!surrounding[i].get('o')){ //No obstacle flag
 							surrounding[i].set('s', true);
 							cellResult[i] = 1;
-						}else cellResult[i] = 0;
-					}else cellResult[i] = 0;
-				}else cellResult[i] = 0;
+						}
+					}
+				}
 			}else cellResult[i] = 0;
 		}
 		return cellResult; //This does nothing except return something

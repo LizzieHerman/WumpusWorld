@@ -2,7 +2,7 @@ package wumpusworld;
 
 /**
  *
- * @author Lizzie Herman
+ * @author Lizzie Herman, Greg Neznanski
  */
 public class Cell {
     boolean wumpus;

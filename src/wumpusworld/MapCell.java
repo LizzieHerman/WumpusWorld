@@ -2,7 +2,7 @@ package wumpusworld;
 
 /**
  *
- * @author Lizzie Herman
+ * @author Lizzie Herman, Greg Neznanski
  */
 public class MapCell extends Cell{
 	private boolean wumpusFlag;
