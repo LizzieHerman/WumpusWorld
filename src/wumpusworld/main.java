@@ -8,7 +8,7 @@ public class main {
     public static void main(String[] args) {
         for(int i = 5; i <= 25; i += 5){
             WumpusWorld world = new WumpusWorld(i);
-            int numWump = world.generateWorld(0.20, 0.20, 0.20);
+            int numWump = world.generateWorld(0.2, 0.2, 0.2);
             Explorer agent = new FOExplorer(world, i, numWump);
             world.setExplorer(agent);
             

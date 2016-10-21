@@ -120,7 +120,7 @@ public class Explorer {
     public void grabGold(){
         if(world.removeGold()){
             cost += 1000;
-            System.out.print("You Won");
+            System.out.println("You Won");
             this.gameWon = true;
         }
     }

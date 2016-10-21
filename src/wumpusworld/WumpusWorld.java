@@ -84,10 +84,12 @@ public class WumpusWorld {
         int gold = empty[rand.nextInt(numEmpty)]; // get random empty cell 
         if(gold < 100){
         	world[0][gold%100].set('g', true);
+                world[0][gold%100].set('t', true);
         	world[0][gold%100].setDisplay("G");
         	grid[0][gold%100] = "gold";
         }else {
         	world[gold/100][gold%100].set('g', true);
+                world[gold/100][gold%100].set('t', true);
         	world[gold/100][gold%100].setDisplay("G");
         	grid[gold/100][gold%100] = "gold";
         }
@@ -269,6 +271,7 @@ public class WumpusWorld {
         int y = agentState[1];
         if(x < world.length && y < world[x].length && x >= 0 && y >= 0 && world[x][y].get('g')){
             world[x][y].set('g', false); //removing the gold from the world.
+            System.out.println("PICKING UP THE GOLD");
             return true;
         }
         return false; //you can't pick it up if it's not there.

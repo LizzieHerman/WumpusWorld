@@ -9,10 +9,12 @@ import java.util.ArrayList;
 
 public class Relation{
 	ArrayList<MapCell> related;
+        MapCell relatedTo;
 	char hazard;
 	
-	public Relation(MapCell[] related, char hazard) {
+	public Relation(MapCell[] related, char hazard, MapCell relatedTo) {
 		this.hazard = hazard;
+                this.relatedTo = relatedTo;
 		this.related = new ArrayList<MapCell>();
 		for(int i = 0; i < related.length ; i++){
 			if(related[i] != null){
@@ -60,4 +62,8 @@ public class Relation{
 	public char getHazard(){
 		return this.hazard;
 	}
+        
+        public MapCell relatedTo(){
+            return relatedTo();
+        }
 }

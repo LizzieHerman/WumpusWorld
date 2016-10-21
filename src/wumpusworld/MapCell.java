@@ -9,7 +9,7 @@ public class MapCell extends Cell{
     private boolean pitFlag;
     private boolean beenHere;
     private boolean safe;
-    private boolean frontier, smell, breeze, glitter;
+    private boolean frontier, smell, breeze, glitter, wumpus, pit, obstacle, gold;
     private int visited, x, y;
     
     public MapCell(int x, int y) {
@@ -24,13 +24,17 @@ public class MapCell extends Cell{
         this.breeze = super.breeze;
         this.x = x;
         this.y = y;
+        this.wumpus = false;
+        this.pit = false;
+        this.obstacle = false;
+        this.gold = false;
     }
     
     public boolean get(char c){
-        if(c == 'w') return super.wumpus;
-        if(c == 'p') return super.pit;
-        if(c == 'o') return super.obstacle;
-        if(c == 'g') return super.gold;
+        if(c == 'w') return wumpus;
+        if(c == 'p') return pit;
+        if(c == 'o') return obstacle;
+        if(c == 'g') return gold;
         if(c == 'u') return wumpusFlag;
         if(c == 'i') return pitFlag;
         if(c == 'b') return beenHere;
@@ -52,8 +56,10 @@ public class MapCell extends Cell{
         if(c == 'l') smell = b;
         if(c == 'z') breeze = b;
         if(c == 't') glitter = b;
-        if(c == 'w') super.wumpus = b;
-        if(c == 'p') super.pit = b;
+        if(c == 'w') wumpus = b;
+        if(c == 'p') pit = b;
+        if(c == 'o') obstacle = b;
+        if(c == 'g') gold = b;
     }
     
     public void set(char c){
