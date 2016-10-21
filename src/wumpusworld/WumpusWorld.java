@@ -273,4 +273,5 @@ public class WumpusWorld {
         }
         return false; //you can't pick it up if it's not there.
     }
+    
 }
