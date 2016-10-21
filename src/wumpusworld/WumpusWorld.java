@@ -204,6 +204,7 @@ public class WumpusWorld {
         }
         else if(world[x][y].get('w')){ //Or we just walk into a Wumpus
             board.incremStates(3);
+            agent.deadCoords(x, y);
             PopUp died = new PopUp(3, agent.getCost());
             died.pack();
             //died.setVisible(true);
@@ -214,6 +215,7 @@ public class WumpusWorld {
         }
         else if(world[x][y].get('p')){ //Or we just walk into a pit
             board.incremStates(3);
+            agent.deadCoords(x, y);
             PopUp died = new PopUp(4, agent.getCost());
             died.pack();
             //died.setVisible(true);
