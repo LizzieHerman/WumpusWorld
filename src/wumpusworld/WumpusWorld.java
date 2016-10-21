@@ -3,12 +3,13 @@ package wumpusworld;
 import java.util.Random;
 /**
  *
- * @author Lizzie Herman
+ * @author Lizzie Herman, Greg Neznanski
  * Really small additions by Ryan Freivalds
  */
 public class WumpusWorld {
-    private Cell world[][];
+     Cell world[][];
     private Explorer agent;
+    GameBoard board;
     private int[] agentState = { 0, 0, 1};// = { 0, 0, 1}; //represents the agent's X location, Y location, and current facing, respectively.
     //Direction is 1 for "East," 2 for "South," 3 for "West," and 4 for "North."
     private GameBoard board;
@@ -33,15 +34,45 @@ public class WumpusWorld {
                 if(i == 0 && j == 0){
                     grid[i][j] = "explorer";
                     world[i][j].set('e', true); //placing the player
+                    world[i][j].setDisplay("E");
                 }else if(rand.nextDouble() < pWumpus){ //otherwise seeing if we want to generate a Wumpus, Pit, or wall...
                     world[i][j].set('w', true);
+                    world[i][j].setDisplay("W");
                     grid[i][j] = "wumpus";
                     numWumpus++; //So we know how many arrows we take with us.
+                    //Set smell in surrounding cells
+                    if(i-1 >= 0){
+                    	world[i-1][j].set('l', true);
+                    }
+                    if(i+1 < world.length){
+                    	world[i+1][j].set('l', true);
+                    }
+                    if(j-1 >= 0){
+                    	world[i][j-1].set('l', true);
+                    }
+                    if(j+1 < world.length){
+                    	world[i][j+1].set('l', true);
+                    }
                 }else if(rand.nextDouble() < pPit){
                     world[i][j].set('p', true);
+                    world[i][j].setDisplay("P");
                     grid[i][j] = "pit";
+                    //Set breeze in surrounding cells
+                    if(i-1 >= 0){
+                    	world[i-1][j].set('z', true);
+                    }
+                    if(i+1 < world.length){
+                    	world[i+1][j].set('z', true);
+                    }
+                    if(j-1 >= 0){
+                    	world[i][j-1].set('z', true);
+                    }
+                    if(j+1 < world.length){
+                    	world[i][j+1].set('z', true);
+                    }
                 }else if(rand.nextDouble() < pObstacle){
                     world[i][j].set('o', true);
+                    world[i][j].setDisplay("O");
                     grid[i][j] = "wall";
                 }
                 else{ //or just leave it empty.
@@ -52,9 +83,18 @@ public class WumpusWorld {
             }
         }
         int gold = empty[rand.nextInt(numEmpty)]; // get random empty cell 
-        if(gold < 100) world[0][gold%100].set('g', true);
-        else world[gold/100][gold%100].set('g', true);
-        board = new GameBoard(numWumpus, grid);
+        if(gold < 100){
+        	world[0][gold%100].set('g', true);
+                world[0][gold%100].set('t', true);
+        	world[0][gold%100].setDisplay("G");
+        	grid[0][gold%100] = "gold";
+        }else {
+        	world[gold/100][gold%100].set('g', true);
+                world[gold/100][gold%100].set('t', true);
+        	world[gold/100][gold%100].setDisplay("G");
+        	grid[gold/100][gold%100] = "gold";
+        }
+        board = new GameBoard(numWumpus, grid, world);
         board.pack();
         board.setVisible(true);
         return numWumpus;
@@ -74,7 +114,7 @@ public class WumpusWorld {
         return world[x][y]; //otherwise return that cell.
     }
     
-    public boolean[] senseCell(int x, int y){  //may change this section from a sequence of checks to a cell intrinsic. 
+    public boolean[] senseCell(int x, int y){ 
         boolean stench = false;
         boolean breeze = false;
         boolean gold = false;
@@ -165,6 +205,7 @@ public class WumpusWorld {
         }
         else if(world[x][y].get('w')){ //Or we just walk into a Wumpus
             board.incremStates(3);
+            agent.deadCoords(x, y);
             PopUp died = new PopUp(3, agent.getCost());
             died.pack();
             //died.setVisible(true);
@@ -174,6 +215,7 @@ public class WumpusWorld {
         }
         else if(world[x][y].get('p')){ //Or we just walk into a pit
             board.incremStates(3);
+            agent.deadCoords(x, y);
             PopUp died = new PopUp(4, agent.getCost());
             died.pack();
             //died.setVisible(true);
@@ -188,6 +230,7 @@ public class WumpusWorld {
             agentState[1] = y; //update our agent's y coordinate
             board.changeGrid(x, y, "explorer", agentState[2]);
             world[agentState[0]][agentState[1]].set('e', true); //place the agent in that cell
+            agent.state(agentState);
         }
         board.updatePanels();
     }
@@ -202,6 +245,8 @@ public class WumpusWorld {
                     if(world[x][y].get('w')){ //if we hit a Wumpus...
                         world[x][y].set('w', false); //No more Wumpus
                         shotWumpus = true; //And toggle a scream.
+                        agent.deadWumpusCoords[0] = x;
+                        agent.deadWumpusCoords[1] = y;
                         break;
                     }
                     else if (world[x][y].get('o')){ //if we hit a wall
@@ -210,10 +255,12 @@ public class WumpusWorld {
                 }
                 break;
             case 2:
-                for(; y < world.length; y--){ //traveling down the Y axis, decreasing (going South)
+                for(; y >=0; y--){ //traveling down the Y axis, decreasing (going South)
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
+                        agent.deadWumpusCoords[0] = x;
+                        agent.deadWumpusCoords[1] = y;
                         break;
                     }
                     else if (world[x][y].get('o')){ //if we hit a wall
@@ -226,6 +273,8 @@ public class WumpusWorld {
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
+                        agent.deadWumpusCoords[0] = x;
+                        agent.deadWumpusCoords[1] = y;
                         break;
                     }
                     else if (world[x][y].get('o')){ //if we hit a wall
@@ -234,10 +283,12 @@ public class WumpusWorld {
                 }
                 break;
             case 4:
-                for(; y >= 0; y++){ //traveling up the Y axis, increasing. (Going North)
+                for(; y < world.length; y++){ //traveling up the Y axis, increasing. (Going North)
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
+                        agent.deadWumpusCoords[0] = x;
+                        agent.deadWumpusCoords[1] = y;
                         break;
                     }
                     else if (world[x][y].get('o')){ //if we hit a wall
@@ -264,9 +315,10 @@ public class WumpusWorld {
             grab.pack();
             grab.setVisible(true);
             world[x][y].set('g', false); //removing the gold from the world.
+            System.out.println("PICKING UP THE GOLD");
             return true;
         }
         return false; //you can't pick it up if it's not there.
     }
+    
 }
-

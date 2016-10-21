@@ -2,7 +2,7 @@ package wumpusworld;
 
 /**
  *
- * @author Lizzie Herman
+ * @author Lizzie Herman, Greg Neznanski
  *Some really small additions by Ryan Freivalds
  */
 public class Explorer {
@@ -14,6 +14,9 @@ public class Explorer {
     int arrows;
     int timesDied;
     WumpusWorld world;
+    int[] agentState, deadWumpusCoords, deadCell;
+    private boolean wumpusKilled;
+    boolean gameWon;
     
     public Explorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
         x = 0;
@@ -24,6 +27,10 @@ public class Explorer {
         arrows = num;
         timesDied = 0;
         world = w;
+        this.agentState = new int[]{0,0,1};
+        this.wumpusKilled = false;
+        this.gameWon = false;
+        this.deadCell = new int[2];
     }
     
     public void start(){
@@ -51,7 +58,7 @@ public class Explorer {
                 break;
         }
         world.moveExplorer(x, y);
-        getPercepts();
+        //getPercepts();
     }
     
     public void turnRight(){
@@ -83,29 +90,30 @@ public class Explorer {
         x = x1;
         y = y1;
         System.out.print("Feel Bump");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
     }
     
     public void hearScream(){
         cost += 10;
         System.out.print("Heard Scream");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
+        wumpusKilled = true;
     }
     
     // takes in last safe location and whetheror not a wumpus killed them
     public void die(int x1, int y1, boolean wumpus){
         timesDied++;
         cost -= 1000;
+        if(wumpus){
+        	System.out.print("You died to a wumpus in cell " + x + ", " + y + ". Returning to " + x1 + ", " + y1 + ".");
+        }else{
+        	System.out.print("You fell in a pit in cell " + x + ", " + y + ". Returning to " + x1 + ", " + y1 + ".");
+        }
         x = x1;
         y = y1;
-        System.out.print("You died");
-        // add wumpus/ pit to knowledge base
+    }
+    
+    public void deadCoords(int x, int y){
+    	this.deadCell[0] = x;
+    	this.deadCell[1] = y;
     }
     
     public void seeGlitter(){
@@ -116,8 +124,8 @@ public class Explorer {
     public void grabGold(){
         if(world.removeGold()){
             cost += 1000;
-            System.out.print("You Won");
-            // how to end game
+            System.out.println("You Won");
+            this.gameWon = true;
         }
     }
     
@@ -137,15 +145,29 @@ public class Explorer {
          */
     }
     
-    public void getPercepts(){
-        boolean[] senses = world.senseCell(x, y);
-        // if don't smell stench or feel breeze then surrounding cells are safe
-        if(!(senses[0] || senses[1])) System.out.print("Surrounding Cells are Safe");
-        /*
-         * TO-DO
-         * other methods update knowledge
-         * infer where to go
-        */
+//    public void getPercepts(){
+//        boolean[] senses = world.senseCell(x, y);
+//        // if don't smell stench or feel breeze then surrounding cells are safe
+//        if(!(senses[0] || senses[1])) System.out.print("Surrounding Cells are Safe");
+//        /*
+//         * TO-DO
+//         * other methods update knowledge
+//         * infer where to go
+//        */
+//    }
+    
+    public void state(int[] agentState){
+    	this.agentState = agentState;
+    }
+    
+    public boolean wumpusKilled(){
+    	boolean temp = this.wumpusKilled;
+    	this.wumpusKilled = false;
+    	return temp;
+    }
+    
+    public boolean checkWin(){
+    	return this.gameWon;
     }
     
     public int getCost(){
