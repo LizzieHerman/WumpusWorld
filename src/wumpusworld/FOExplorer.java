@@ -23,6 +23,10 @@ public class FOExplorer extends Explorer {
     }
     
     public void start(){
+        /*
+         * TO-DO
+         * decide how the program will start
+         */
         move();
     }
     
