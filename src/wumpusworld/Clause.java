@@ -7,12 +7,17 @@ package wumpusworld;
 
 public class Clause {
 	private int clauseNumber, wumpusCellX, wumpusCellY;
+	private boolean hazard;
+        private int x, y;
 	private MapCell facing;
 
 	public Clause(int clauseNumber) {
 		this.clauseNumber = clauseNumber;
 		this.wumpusCellX = -1;
 		this.wumpusCellY = -1;
+		this.hazard = false;
+                this.x = 0;
+                this.y = 0;
 	}
 
 	public int[] checkClause(int[] currentState, Map worldMap) {
@@ -229,4 +234,21 @@ public class Clause {
 		cellResult[cellNum] = 1;
 		return cellResult;
 	}
+	
+	//Clause 3b, if you die in a cell, mark the cell as wumpus or pit
+        public int[] clause13(int[] currentState, Map worldMap){
+            int[] cellResult = new int[]{1};
+            if(this.hazard){
+    		worldMap.getCell(this.x, this.y).set('w', true);
+            }else{
+    		worldMap.getCell(this.x, this.y).set('p', true);
+            }
+            return cellResult;
+        }
+        
+        public void setDead(int x, int y, boolean hazard){
+            this.x = x;
+            this.y = y;
+            this.hazard = hazard;
+        }
 }
