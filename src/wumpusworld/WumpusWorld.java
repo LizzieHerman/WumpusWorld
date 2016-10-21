@@ -11,6 +11,7 @@ public class WumpusWorld {
     private Explorer agent;
     private int[] agentState = { 0, 0, 1};// = { 0, 0, 1}; //represents the agent's X location, Y location, and current facing, respectively.
     //Direction is 1 for "East," 2 for "South," 3 for "West," and 4 for "North."
+    private GameBoard board;
     
     public WumpusWorld(int n){ //initializes all of our cell objects, to be filled (or left empty) by the generateWorld() function.
         world = new Cell[n][n];
@@ -53,9 +54,9 @@ public class WumpusWorld {
         int gold = empty[rand.nextInt(numEmpty)]; // get random empty cell 
         if(gold < 100) world[0][gold%100].set('g', true);
         else world[gold/100][gold%100].set('g', true);
-        //GameBoard board = new GameBoard(numWumpus, grid);
-        //board.pack();
-        //board.setVisible(true);
+        board = new GameBoard(numWumpus, grid);
+        board.pack();
+        board.setVisible(true);
         return numWumpus;
     }
     
@@ -122,43 +123,78 @@ public class WumpusWorld {
                 agent.feelBreeze();
             }
         }
+        board.changeBoolStates( 4, stench);
+        board.changeBoolStates( 5, breeze);
+        board.changeBoolStates( 6, gold);
+        board.updatePanels();
         boolean[] senses = {stench, breeze, gold}; //setting what we preceive, but not any locations.
         return senses;
     }
     
     public void turnExplorer( boolean left){ //Directions are 1 for "East," 2 for "South," 3 for "West," and 4 for "North."
+        board.changeGrid(agentState[0], agentState[1], "path", agentState[2]);
         if(left){
             if(agentState[2] == 1) agentState[2] = 4; //if we are facing East and turn left we are now facing North.
-            else agentState[2]--; //otherwise we just count down to get the proper facing.
+            else agentState[2] -= 1; //otherwise we just count down to get the proper facing.
         }else{
             if(agentState[2] == 4) agentState[2] = 1; //if we are facing North and turn right we are now facing East.
-            else agentState[2]++; //otherwise we count up.
+            else agentState[2] += 1; //otherwise we count up.
         }
+        board.incremStates(2);
+        board.changeCost(agent.getCost());
+        board.changeGrid(agentState[0], agentState[1], "explorer", agentState[2]);
+        board.updatePanels();
     }
     
     public void moveExplorer(int x, int y){ //inputs are the cell we are attempting to move to
+        board.incremStates(2);
+        board.changeCost(agent.getCost());
         if( x >= world.length || y >= world.length || x < 0 || y < 0){ //if attempting to move "out of bounds (and into a wall)."
+            board.incremStates(7);
+            PopUp bump = new PopUp(0, 0);
+            bump.pack();
+            //bump.setVisible(true);
             agent.feelBump( agentState[0], agentState[1]); //we don't actually move, but we feel a bump...
         }
         else if(world[x][y].get('o')){ //Or we just walk into a wall
+            board.incremStates(7);
+            PopUp bump = new PopUp(1, 0);
+            bump.pack();
+            //bump.setVisible(true);
             agent.feelBump( agentState[0], agentState[1]);
         }
         else if(world[x][y].get('w')){ //Or we just walk into a Wumpus
+            board.incremStates(3);
+            PopUp died = new PopUp(3, agent.getCost());
+            died.pack();
+            //died.setVisible(true);
             agent.die( agentState[0], agentState[1], true); //return to last safe location, and die by a Wumpus
+            board.changeCost(agent.getCost());
+            board.changeGrid(x, y, "inwumpus", 0);
         }
         else if(world[x][y].get('p')){ //Or we just walk into a pit
+            board.incremStates(3);
+            PopUp died = new PopUp(4, agent.getCost());
+            died.pack();
+            //died.setVisible(true);
             agent.die( agentState[0], agentState[1], false); //return to a safe location, and die by a pit.
+            board.changeCost(agent.getCost());
+            board.changeGrid(x, y, "inpit", 0);
         }
         else{ //if it's empty...
+            board.changeGrid(agentState[0], agentState[1], "path", agentState[2]);
             world[agentState[0]][agentState[1]].set('e', false); //remove the agent from where we were.
             agentState[0] = x; //update our agent's X coordinate
             agentState[1] = y; //update our agent's y coordinate
+            board.changeGrid(x, y, "explorer", agentState[2]);
             world[agentState[0]][agentState[1]].set('e', true); //place the agent in that cell
         }
-        
+        board.updatePanels();
     }
     
     public void shootArrow(int x, int y, int direction){ //the location fired from and direction fired
+        board.decremStates(1);
+        board.incremStates(2);
         boolean shotWumpus = false;
         switch(direction){ //the arrow travels along our facing
             case 1:
@@ -211,7 +247,12 @@ public class WumpusWorld {
                 break;
         }
         if(shotWumpus){
+            PopUp scream = new PopUp(2, 0);
+            scream.pack();
+            scream.setVisible(true);
             agent.hearScream(); //kinda self explanatory
+            board.changeCost(agent.getCost());
+            board.changeGrid(x, y, "deadwumpus", 0);
         }
     }
     
@@ -219,6 +260,9 @@ public class WumpusWorld {
         int x = agentState[0];
         int y = agentState[1];
         if(x < world.length && y < world[x].length && x >= 0 && y >= 0 && world[x][y].get('g')){
+            PopUp grab = new PopUp(6, agent.getCost());
+            grab.pack();
+            grab.setVisible(true);
             world[x][y].set('g', false); //removing the gold from the world.
             return true;
         }
