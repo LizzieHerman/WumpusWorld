@@ -9,7 +9,6 @@ import java.util.Random;
 public class WumpusWorld {
      Cell world[][];
     private Explorer agent;
-    GameBoard board;
     private int[] agentState = { 0, 0, 1};// = { 0, 0, 1}; //represents the agent's X location, Y location, and current facing, respectively.
     //Direction is 1 for "East," 2 for "South," 3 for "West," and 4 for "North."
     private GameBoard board;
@@ -94,7 +93,7 @@ public class WumpusWorld {
         	world[gold/100][gold%100].setDisplay("G");
         	grid[gold/100][gold%100] = "gold";
         }
-        board = new GameBoard(numWumpus, grid, world);
+        board = new GameBoard(numWumpus, grid);
         board.pack();
         board.setVisible(true);
         return numWumpus;
