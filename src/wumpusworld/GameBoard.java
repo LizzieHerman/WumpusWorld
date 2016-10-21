@@ -196,11 +196,11 @@ public class GameBoard extends JFrame {
     }
     
     public void updatePanels(){
-        JPanel board = new JPanel();
-        board.setLayout(boardLayout);
+        JPanel nboard = new JPanel();
+        nboard.setLayout(boardLayout);
         for(int j = grid.length-1; j >= 0; j--){
             for(int i = 0; i < grid.length; i++){
-                board.add(grid[i][j]);
+                nboard.add(grid[i][j]);
             }
         }
         cost.setText("Cost: " + stat[0]);
@@ -211,7 +211,7 @@ public class GameBoard extends JFrame {
         breeze.setText("Feel Breeze: " + stat[5]);
         glimmer.setText("See Glimmer: " + stat[6]);
         bump.setText("Bump Count: " + stat[7]);
-        this.add(board, BorderLayout.NORTH);
+        this.add(nboard, BorderLayout.NORTH);
     }
     
     private JLabel cost = new JLabel();
