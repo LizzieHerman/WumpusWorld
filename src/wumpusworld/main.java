@@ -6,14 +6,12 @@ package wumpusworld;
  */
 public class main {
     public static void main(String[] args) {
-        for(int i = 5; i <= 25; i += 5){
+        for(int i = 5; i <= 5; i += 5){
             WumpusWorld world = new WumpusWorld(i);
             int numWump = world.generateWorld(0.20, 0.20, 0.20);
             Explorer agent = new RExplorer(world, i, numWump);
             world.setExplorer(agent);
-            // sense the cell you are currently in
-            //agent.getPercepts();
-            
+            // start the agent
             agent.start();
         }
     }
