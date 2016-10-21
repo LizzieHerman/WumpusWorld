@@ -9,7 +9,7 @@ public class MapCell extends Cell{
     private boolean pitFlag;
     private boolean beenHere;
     private boolean safe;
-    private boolean frontier, smell, breeze, glitter, obstacleFlag;
+    private boolean frontier, smell, breeze, glitter;
     private int visited, x, y;
     
     public MapCell(int x, int y) {
@@ -22,7 +22,6 @@ public class MapCell extends Cell{
         visited = 0;
         this.smell = super.smell;
         this.breeze = super.breeze;
-        this.obstacleFlag = false;
         this.x = x;
         this.y = y;
     }
@@ -40,7 +39,6 @@ public class MapCell extends Cell{
         if(c == 'l') return this.smell;
         if(c == 'z') return this.breeze;
         if(c == 't') return glitter;
-        if(c == 'c') return this.obstacleFlag;
         return false;
     }
     
@@ -56,7 +54,6 @@ public class MapCell extends Cell{
         if(c == 't') glitter = b;
         if(c == 'w') super.wumpus = b;
         if(c == 'p') super.pit = b;
-        if(c == 'c') this.obstacleFlag = b;
     }
     
     public void set(char c){

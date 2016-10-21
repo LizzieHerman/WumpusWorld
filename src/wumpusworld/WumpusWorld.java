@@ -182,10 +182,12 @@ public class WumpusWorld {
             agent.feelBump( agentState[0], agentState[1]);
         }
         else if(world[x][y].get('w')){ //Or we just walk into a Wumpus
-            agent.die( agentState[0], agentState[1], true); //return to last safe location, and die by a Wumpus
+        	agent.deadCoords(x, y);
+        	agent.die( agentState[0], agentState[1], true); //return to last safe location, and die by a Wumpus
         }
         else if(world[x][y].get('p')){ //Or we just walk into a pit
-            agent.die( agentState[0], agentState[1], false); //return to a safe location, and die by a pit.
+            agent.deadCoords(x, y);
+        	agent.die( agentState[0], agentState[1], false); //return to a safe location, and die by a pit.
         }
         else{ //if it's empty...
             world[agentState[0]][agentState[1]].set('e', false); //remove the agent from where we were.
@@ -205,6 +207,8 @@ public class WumpusWorld {
                     if(world[x][y].get('w')){ //if we hit a Wumpus...
                         world[x][y].set('w', false); //No more Wumpus
                         shotWumpus = true; //And toggle a scream.
+                        agent.deadWumpusCoords[0] = x;
+                        agent.deadWumpusCoords[1] = y;
                         break;
                     }
                     else if (world[x][y].get('o')){ //if we hit a wall
@@ -213,10 +217,12 @@ public class WumpusWorld {
                 }
                 break;
             case 2:
-                for(; y < world.length; y--){ //traveling down the Y axis, decreasing (going South)
+                for(; y >=0; y--){ //traveling down the Y axis, decreasing (going South)
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
+                        agent.deadWumpusCoords[0] = x;
+                        agent.deadWumpusCoords[1] = y;
                         break;
                     }
                     else if (world[x][y].get('o')){ //if we hit a wall
@@ -229,6 +235,8 @@ public class WumpusWorld {
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
+                        agent.deadWumpusCoords[0] = x;
+                        agent.deadWumpusCoords[1] = y;
                         break;
                     }
                     else if (world[x][y].get('o')){ //if we hit a wall
@@ -237,10 +245,12 @@ public class WumpusWorld {
                 }
                 break;
             case 4:
-                for(; y >= 0; y++){ //traveling up the Y axis, increasing. (Going North)
+                for(; y < world.length; y++){ //traveling up the Y axis, increasing. (Going North)
                     if(world[x][y].get('w')){
                         world[x][y].set('w', false);
                         shotWumpus = true;
+                        agent.deadWumpusCoords[0] = x;
+                        agent.deadWumpusCoords[1] = y;
                         break;
                     }
                     else if (world[x][y].get('o')){ //if we hit a wall
@@ -264,4 +274,3 @@ public class WumpusWorld {
         return false; //you can't pick it up if it's not there.
     }
 }
-

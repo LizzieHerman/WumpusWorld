@@ -14,7 +14,7 @@ public class Explorer {
     int arrows;
     int timesDied;
     WumpusWorld world;
-    int[] agentState;
+    int[] agentState, deadWumpusCoords, deadCell;
     private boolean wumpusKilled;
     boolean gameWon;
     
@@ -30,6 +30,7 @@ public class Explorer {
         this.agentState = new int[]{0,0,1};
         this.wumpusKilled = false;
         this.gameWon = false;
+        this.deadCell = new int[2];
     }
     
     public void start(){
@@ -97,9 +98,18 @@ public class Explorer {
     public void die(int x1, int y1, boolean wumpus){
         timesDied++;
         cost -= 1000;
+        if(wumpus){
+        	System.out.print("You died to a wumpus in cell " + x + ", " + y + ". Returning to " + x1 + ", " + y1 + ".");
+        }else{
+        	System.out.print("You fell in a pit in cell " + x + ", " + y + ". Returning to " + x1 + ", " + y1 + ".");
+        }
         x = x1;
         y = y1;
-        System.out.print("You died");
+    }
+    
+    public void deadCoords(int x, int y){
+    	this.deadCell[0] = x;
+    	this.deadCell[1] = y;
     }
     
     public void seeGlitter(){
