@@ -18,9 +18,10 @@ public class Cell {
         gold = false;
         this.breeze = false;
         this.smell = false;
-        this.display = " ";
+        this.display = " "; //the displayed value of what is in the cell
     }
     
+    //returns whether or not this cell has the requested object in it.
     public boolean get(char c){
         if(c == 'w') return wumpus;
         if(c == 'p') return pit;
@@ -31,6 +32,7 @@ public class Cell {
         return false;
     }
     
+    //sets the specified boolean in the cell to reflect what is now in it.  
     public void set(char c, boolean b){
         if(c == 'w') wumpus = b;
         if(c == 'p') pit = b;
@@ -40,10 +42,12 @@ public class Cell {
         if(c == 'l') this.smell = b;
     }
     
+    //updates the display to the newly given display
     public void setDisplay(String display){
     	this.display = display;
     }
     
+    //returns this cells display
     public String getDisplay(){
     	return this.display;
     }
