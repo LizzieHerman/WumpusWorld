@@ -36,7 +36,11 @@ public class Explorer {
     }
     
     public void start(){
-        move();
+        /*
+         * TO-DO
+         * decide how the program will start
+         */
+        turnRight();
     }
     
     public void move(){
@@ -164,5 +168,9 @@ public class Explorer {
     
     public boolean checkWin(){
     	return this.gameWon;
+    }
+    
+    public int getCost(){
+        return cost;
     }
 }
