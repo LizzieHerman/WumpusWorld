@@ -181,7 +181,8 @@ public class WumpusWorld {
             agent.feelBump( agentState[0], agentState[1]); //we don't actually move, but we feel a bump...
         }
         else if(world[x][y].get('o')){ //Or we just walk into a wall
-            agent.feelBump( agentState[0], agentState[1]);
+            agent.setBumpCoords(x, y);
+        	agent.feelBump( agentState[0], agentState[1]);
         }
         else if(world[x][y].get('w')){ //Or we just walk into a Wumpus
         	agent.deadCoords(x, y);

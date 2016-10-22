@@ -18,6 +18,7 @@ public class main {
             	//world.board.updateUI();
             	//System.out.println("looping");
             }
+            System.out.println("Cost: " + agent.cost);
         }
     }
 

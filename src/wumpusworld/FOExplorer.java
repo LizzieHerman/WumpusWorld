@@ -9,11 +9,12 @@ import java.util.ArrayList;
  */
 public class FOExplorer extends Explorer {
      Map worldMap;
-     int numWump;
+     int numWump, repeatMove;
      Clause[] rules;
      ArrayList<Relation> relations;
      int[] moveList; //holds 1 for safe, 0 for unsafe for the 4 surrounding cells
      boolean gameWon, noMoves;
+     int[] bumpCoords;
     
     public FOExplorer(WumpusWorld w, int n, int num) {
          super(w, n, num);
@@ -43,6 +44,7 @@ public class FOExplorer extends Explorer {
          moveList = new int[]{1,1,1,1};
          this.gameWon = false;
          this.noMoves = false;
+         this.repeatMove = 0;
     }
     
     public void start(){
@@ -60,13 +62,14 @@ public class FOExplorer extends Explorer {
     }
     
     public void feelBump(int x1, int y1){
-        if(x < worldMap.size() && y < worldMap.size() && x >= 0 && y >= 0){ // test to see if we hit wall or obstacle
-            worldMap.setCell(x, y, 'o', true);
+    	if(x < worldMap.size() && y < worldMap.size() && x >= 0 && y >= 0){ // test to see if we hit wall or obstacle
+    		worldMap.getCell(x, y).set('o', true);
+    		worldMap.getCell(x, y).set('f', false);
         }
         x = x1;
         y = y1;
-        
-        System.out.println("Walked into a wall in cell " + x1 + ", " + y1 + ". Returned to " + x + ", " + y + ".");
+
+        System.out.println("Walked into a wall in cell " + super.bumpCoords[0] + ", " + super.bumpCoords[1] + ". Returned to " + x + ", " + y + ".");
     }
     
     public void grabGold(){
@@ -79,15 +82,73 @@ public class FOExplorer extends Explorer {
     }
     
     public void die(int x1, int y1, boolean wumpus){
+    	boolean foundRelation = false;
     	rules[13].setDead(super.deadCell[0], super.deadCell[1], wumpus);
         rules[13].checkClause(agentState, worldMap);
+        for(int i = 0; i < relations.size(); i++){
+        	if(relations.get(i).relatedTo().getCoords()[0] == agentState[0]){
+        		if(relations.get(i).relatedTo().getCoords()[1] == agentState[1]){
+        			if(relations.get(i).getRelated().size() == 1){
+        				if(relations.get(i).getRelated().get(0).getCoords()[0] == super.deadCell[0]){
+        					if(relations.get(i).getRelated().get(0).getCoords()[1] == super.deadCell[1]){
+        						if(relations.get(i).getHazard() == 'u'){
+        	        				if(wumpus){
+        	        					relations.get(i).updateKnown();
+        	                			foundRelation = true;
+        	        				}
+        	        			}else{
+        	        				if(!wumpus){
+        	        					relations.get(i).updateKnown();
+        	                			foundRelation = true;
+        	        				}
+        	        			}
+        					}
+        				}
+        			}
+        		}
+        	}
+        }
+        if(!foundRelation){
+        	Relation newRelation;
+        	MapCell[] related = new MapCell[]{worldMap.getCell(super.deadCell[0], super.deadCell[1])};;
+        	if(wumpus){
+        		newRelation = new Relation(related, 'w', worldMap.getCell(agentState[0],agentState[1]));  //clause 13 set dead?
+        	}else{
+        		newRelation = new Relation(related, 'p', worldMap.getCell(agentState[0],agentState[1]));
+        	}
+        	if(newRelation != null){
+        		relations.add(newRelation);
+        	}
+        }
     	super.die(x1, y1, wumpus);
-        System.out.println("Marked cell as dangerous.");
+    	agentState[0] = super.x;
+    	agentState[1] = super.y;
+        System.out.println(" Marked cell as dangerous.");
     }
     
     //Update cells using clauses
     public void updateDB(){  ////////////////////////////////////Update loop numbers when all clauses added
     	int[] result;
+    	
+    	//Check current cell for safe/unsafe, update relation
+    	result = rules[2].checkClause(agentState, worldMap);
+    	if(result[0] == 1){
+    		for(int i = 0; i < relations.size(); i++){
+    			for(int j = 0; j < relations.get(i).getRelated().size(); j++){
+    				if(relations.get(i).getRelated().get(j).getCoords()[0] == agentState[0]){ //if current cell is part of a relation
+    					if(relations.get(i).getRelated().get(j).getCoords()[1] == agentState[1]){
+    						relations.get(i).getRelated().remove(j); //remove it from the relation since we now know it is safe
+    					}
+    				}
+    			}
+    		}
+    	}
+    	
+    	//If cell is marked safe, set unflaggable
+    	result = rules[1].checkClause(agentState, worldMap);
+    	if(result[0] == 1){
+    		worldMap.getCell(agentState[0], agentState[1]).set('a', false);
+    	}
     	
     	//update cells - clauses 2a-2f
     	result = rules[3].checkClause(agentState, worldMap); //2a
@@ -96,6 +157,7 @@ public class FOExplorer extends Explorer {
     	}
     	
     	for(int i = 5; i <= 8; i++){ //2b-2f
+    		boolean valid = false;
     		result = rules[i].checkClause(agentState, worldMap);
     		if(result[0] == 1){
     			char hazard;
@@ -104,21 +166,12 @@ public class FOExplorer extends Explorer {
     			}else{
     				hazard = 'i';
     			}
-    			//Add new relation
-    			Relation newRelation = new Relation(worldMap.getSurrounding(agentState[0], agentState[1], agentState[2]), hazard, worldMap.getCell(agentState[0], agentState[1]));
-    			relations.add(newRelation);
+    			if(!worldMap.getCell(agentState[0], agentState[1]).get('n')){
+    				//Add new relation
+    				Relation newRelation = new Relation(worldMap.getSurrounding(agentState[0], agentState[1], agentState[2]), hazard, worldMap.getCell(agentState[0], agentState[1]));
+    				relations.add(newRelation);
+    			}
     		}
-    	}
-    	
-    	//update relations
-    	boolean valid = true;
-    	if(!relations.isEmpty()){
-	    	for(int i = 0; i < relations.size(); i++){
-	    		valid = relations.get(i).check();
-	    		if(!valid){
-	    			relations.get(i).update();
-	    		}
-	    	}
     	}
     	
     	//Check for confirmed wumpus in a surrounding cell, if true shoot arrow, listen for scream, if scream remove relation from list
@@ -126,7 +179,7 @@ public class FOExplorer extends Explorer {
     	if(result[0] == 1){
     		for(int i = 0; i < relations.size(); i++){
     			if(relations.get(i).getRelated().size() == 1){
-    				if(relations.get(i).getHazard() == 'w'){
+    				if(relations.get(i).getHazard() == 'u'){
     					if(relations.get(i).getCell().get('w')){
 							if(result[1] == 0){ //wumpus is in left cell
 								super.turnLeft();
@@ -141,6 +194,13 @@ public class FOExplorer extends Explorer {
     						if(dead){
     							rules[10].setWumpusCell(super.deadWumpusCoords);
     							result = rules[10].checkClause(agentState, worldMap); //2h
+    							for(int j = 0; j < relations.size(); j++){
+    								for(int k = 0; k < relations.get(j).getRelated().size(); k++){
+    									if(relations.get(j).getRelated().get(k).getCoords() == super.deadWumpusCoords){
+    										relations.get(j).clearRelation('u');
+    									}
+    								}
+    							}
     							relations.remove(i);
     						}
     						if(result[1] == 0){ //return to previous facing
@@ -155,6 +215,21 @@ public class FOExplorer extends Explorer {
     				}
     			}
     		}
+    	}
+    	
+    	//update relations
+    	boolean valid = true;
+    	if(!relations.isEmpty()){
+	    	for(int i = 0; i < relations.size(); i++){
+	    		valid = relations.get(i).checkFlags(); //If a flag in a relation has been changed
+	    		if(!valid){
+	    			relations.get(i).updateFlags(); //remove that cell from relation
+	    		}
+	    		valid = relations.get(i).checkKnown(); //If a wumpus or pit is known to be in the relation
+	    		if(valid){
+	    			relations.get(i).updateKnown(); //Remove other cells from relation, leaving only the wumpus or pit cell in the relation
+	    		}
+	    	}
     	}
     	
     	//Mark safe cells surrounding current cell, do after rules check
@@ -189,25 +264,26 @@ public class FOExplorer extends Explorer {
     	}
     	
     	if(numMoves == 0){
+    		this.repeatMove = 0; //New move, reset repeat move
     		//If only move option is a flagged cell
         	result = rules[12].checkClause(agentState, worldMap); //3a
         	if(result[0] == 1){
-                    System.out.println("No safe moves available.  Taking a risk moving left.");	
-                    super.turnLeft();
+                System.out.println("No safe moves available.  Taking a risk moving left.");	
+                super.turnLeft();
         		super.move();
         		moved = true;
         	}else if(result[1] == 1){
         		System.out.println("No safe moves available.  Taking a risk moving forward.");
-                        super.move();
+                super.move();
         		moved = true;
         	}else if(result[2] == 1){
         		System.out.println("No safe moves available.  Taking a risk moving right.");
-                    super.turnRight();
+                super.turnRight();
         		super.move();
         		moved = true;
         	}else if(result[3] == 1){
         		System.out.println("No safe moves available.  Taking a risk moving backward.");
-                    super.turnRight();
+                super.turnRight();
         		super.turnRight();
         		super.move();
         		moved = true;
@@ -223,39 +299,53 @@ public class FOExplorer extends Explorer {
 //		moveCoords[2] = agentState[2];
     	
     	if(numMoves == 1 && moveList[3] != 0){ //Move backwards
-    		super.turnRight();
-    		super.turnRight();
-    		super.move();
-    		moved = true;
-    		System.out.println("Moving backwards.");
+    		if(surrounding[3] != null){
+    			this.repeatMove++;
+    			if(this.repeatMove < 5){
+    				super.turnRight();
+    				super.turnRight();
+    				super.move();
+    				moved = true;
+    				System.out.println("Moving backwards.");
+    			}
+    		}else{
+    			numMoves++;
+    		}
     	}else{
+    		this.repeatMove = 0;
     		numMoves++;
     	}
     	
     	if(numMoves > 1){ //Move to a frontier cell if there is one
-    		int[] coordsLeft, coordsFront, coordsRight;
+    		this.repeatMove = 0; //New move, reset repeat move
+    		int[] coordsLeft, coordsFront, coordsRight, coordsBack;
     		if(moveList[0] == 1 && surrounding[0] != null){ //Move left
     			coordsLeft = surrounding[0].getCoords();
     			if(worldMap.getCell(coordsLeft[0], coordsLeft[1]).get('f')){
-	    			super.turnLeft();
+    				System.out.println("1Moving to cell " + coordsLeft[0] + ", " + coordsLeft[1] + ".");
+    				super.turnLeft();
 	    			super.move();
 	    			moved = true;
-	    			System.out.println("Moving to cell " + coordsLeft[0] + ", " + coordsLeft[1] + ".");
     			}
     		}else if(moveList[1] == 1 && surrounding[1] != null){ //Move forward
     			coordsFront = surrounding[1].getCoords();
     			if(worldMap.getCell(coordsFront[0], coordsFront[1]).get('f')){
-	    			super.move();
+    				System.out.println("2Moving to cell " + coordsFront[0] + ", " + coordsFront[1] + ".");
+    				super.move();
 	    			moved = true;
-	    			System.out.println("Moving to cell " + coordsFront[0] + ", " + coordsFront[1] + ".");
     			}
     		}else if(moveList[2] == 1 && surrounding[2] != null){ //Move right
     			coordsRight = surrounding[2].getCoords();
     			if(worldMap.getCell(coordsRight[0], coordsRight[1]).get('f')){
-	    			super.turnRight();
+    				System.out.println("3Moving to cell " + coordsRight[0] + ", " + coordsRight[1] + ".");
+    				super.turnRight();
 	    			super.move();
 	    			moved = true;
-	    			System.out.println("Moving to cell " + coordsRight[0] + ", " + coordsRight[1] + ".");
+    			}
+    		}else if(moveList[3] == 1 && surrounding[3] != null){
+    			coordsBack = surrounding[0].getCoords();
+    			if(worldMap.getCell(coordsBack[0], coordsBack[1]).get('f')){
+    				System.out.println("4Moving to cell " + coordsBack[0] + ", " + coordsBack[1] + ".");
     			}
     		}
     		

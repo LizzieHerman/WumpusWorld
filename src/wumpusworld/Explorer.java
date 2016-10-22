@@ -14,7 +14,7 @@ public class Explorer {
     int arrows;
     int timesDied;
     WumpusWorld world;
-    int[] agentState, deadWumpusCoords, deadCell;
+    int[] agentState, deadWumpusCoords, deadCell, bumpCoords;
     private boolean wumpusKilled;
     boolean gameWon;
     
@@ -31,6 +31,8 @@ public class Explorer {
         this.wumpusKilled = false;
         this.gameWon = false;
         this.deadCell = new int[2];
+        this.bumpCoords = new int[2];
+        this.deadWumpusCoords = new int[2];
     }
     
     public void start(){
@@ -88,6 +90,12 @@ public class Explorer {
         System.out.print("Feel Bump");
     }
     
+    //Store coordinates when bumping into a wall for printing
+    public void setBumpCoords(int x, int y){
+    	this.bumpCoords[0] = x;
+    	this.bumpCoords[1] = y;
+    }
+    
     public void hearScream(){
         cost += 10;
         System.out.print("Heard Scream");
@@ -127,30 +135,22 @@ public class Explorer {
     
     public void smellStench(){
         System.out.print("Smelled Stench");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
     }
     
     public void feelBreeze(){
         System.out.print("Felt Breeze");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
     }
     
-//    public void getPercepts(){
-//        boolean[] senses = world.senseCell(x, y);
-//        // if don't smell stench or feel breeze then surrounding cells are safe
-//        if(!(senses[0] || senses[1])) System.out.print("Surrounding Cells are Safe");
-//        /*
-//         * TO-DO
-//         * other methods update knowledge
-//         * infer where to go
-//        */
-//    }
+    public void getPercepts(){
+        boolean[] senses = world.senseCell(x, y);
+        // if don't smell stench or feel breeze then surrounding cells are safe
+        if(!(senses[0] || senses[1])) System.out.print("Surrounding Cells are Safe");
+        /*
+         * TO-DO
+         * other methods update knowledge
+         * infer where to go
+        */
+    }
     
     public void state(int[] agentState){
     	this.agentState = agentState;

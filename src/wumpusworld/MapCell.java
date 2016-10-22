@@ -7,9 +7,9 @@ package wumpusworld;
 public class MapCell extends Cell{
 	private boolean wumpusFlag;
     private boolean pitFlag;
-    private boolean beenHere;
-    private boolean safe;
-    private boolean frontier, smell, breeze, glitter, wumpus, pit, obstacle, gold;
+    private boolean beenHere, ignoring, madeRelation;
+    private boolean safe, pit, obstacle, gold, flagable;
+    private boolean frontier, smell, breeze, glitter, wumpus;
     private int visited, x, y;
     
     public MapCell(int x, int y) {
@@ -28,6 +28,9 @@ public class MapCell extends Cell{
         this.pit = false;
         this.obstacle = false;
         this.gold = false;
+        this.flagable = true;
+        this.ignoring = false;
+        this.madeRelation = false;
     }
     
     public boolean get(char c){
@@ -43,11 +46,14 @@ public class MapCell extends Cell{
         if(c == 'l') return this.smell;
         if(c == 'z') return this.breeze;
         if(c == 't') return glitter;
+        if(c == 'a') return flagable;
+        if(c == 'r') return ignoring;
+        if(c == 'n') return madeRelation;
         return false;
     }
     
     public void set(char c, boolean b){
-        super.set(c, b);
+        //super.set(c, b);
         if(c == 'u') wumpusFlag = b;
         if(c == 'i') pitFlag = b;
         if(c == 'b') beenHere = b;
@@ -60,6 +66,9 @@ public class MapCell extends Cell{
         if(c == 'p') pit = b;
         if(c == 'o') obstacle = b;
         if(c == 'g') gold = b;
+        if(c == 'a') flagable = b;
+        if(c == 'r') ignoring = b;
+        if(c == 'n') madeRelation = b;
     }
     
     public void set(char c){
