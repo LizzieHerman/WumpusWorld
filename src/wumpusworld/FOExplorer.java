@@ -74,7 +74,7 @@ public class FOExplorer extends Explorer {
         agentState[2] = facingBeforeMove;
         super.direction = facingBeforeMove;
 
-        System.out.println("Walked into a wall in cell " + super.bumpCoords[0] + ", " + super.bumpCoords[1] + ". Returned to " + x + ", " + y + ".");
+        //System.out.println("Walked into a wall in cell " + super.bumpCoords[0] + ", " + super.bumpCoords[1] + ". Returned to " + x + ", " + y + ".");
     }
     
     public void grabGold(){
@@ -130,7 +130,7 @@ public class FOExplorer extends Explorer {
     	agentState[1] = super.y;
     	agentState[2] = facingBeforeMove;
     	super.direction = facingBeforeMove;
-        System.out.println(" Marked cell as dangerous.");
+        //System.out.println(" Marked cell as dangerous.");
     }
     
     //Update cells using clauses
@@ -247,7 +247,7 @@ public class FOExplorer extends Explorer {
     	facingBeforeMove = agentState[2];
     	int[] avoidRepeat = new int[]{0,0,0,0};
     	
-    	System.out.println("current: " + agentState[0] + ", " + agentState[1] + " - facing: " + agentState[2]);
+    	//System.out.println("current: " + agentState[0] + ", " + agentState[1] + " - facing: " + agentState[2]);
     	
     	//Implement solution to repeated movements
     	//check last 5 moves for repeat pattern
@@ -304,30 +304,30 @@ public class FOExplorer extends Explorer {
         	result = rules[12].checkClause(agentState, worldMap); //3a
         	if(result[0] == 1){
                 moveHistory.add(1);
-        		System.out.println("No safe moves available.  Taking a risk moving left.");	
+        		//System.out.println("No safe moves available.  Taking a risk moving left.");	
                 super.turnLeft();
         		super.move();
         		moved = true;
         	}else if(result[1] == 1){
         		moveHistory.add(2);
-        		System.out.println("No safe moves available.  Taking a risk moving forward.");
+        		//System.out.println("No safe moves available.  Taking a risk moving forward.");
                 super.move();
         		moved = true;
         	}else if(result[2] == 1){
         		moveHistory.add(3);
-        		System.out.println("No safe moves available.  Taking a risk moving right.");
+        		//System.out.println("No safe moves available.  Taking a risk moving right.");
                 super.turnRight();
         		super.move();
         		moved = true;
         	}else if(result[3] == 1){
         		moveHistory.add(4);
-        		System.out.println("No safe moves available.  Taking a risk moving backward.");
+        		//System.out.println("No safe moves available.  Taking a risk moving backward.");
                 super.turnRight();
         		super.turnRight();
         		super.move();
         		moved = true;
         	}else{
-        		System.out.println("No valid moves without dying or walking into a wall. Game over.");
+        		//System.out.println("No valid moves without dying or walking into a wall. Game over.");
         		super.gameWon = true;
         		return;
         	}
@@ -339,7 +339,7 @@ public class FOExplorer extends Explorer {
     			coordsLeft = surrounding[0].getCoords();
     			if(worldMap.getCell(coordsLeft[0], coordsLeft[1]).get('f')){
     				moveHistory.add(5);
-    				System.out.println("1Moving to cell " + coordsLeft[0] + ", " + coordsLeft[1] + ".");
+    				//System.out.println("1Moving to cell " + coordsLeft[0] + ", " + coordsLeft[1] + ".");
     				super.turnLeft();
 	    			super.move();
 	    			moved = true;
@@ -348,7 +348,7 @@ public class FOExplorer extends Explorer {
     			coordsFront = surrounding[1].getCoords();
     			if(worldMap.getCell(coordsFront[0], coordsFront[1]).get('f')){
     				moveHistory.add(6);
-    				System.out.println("2Moving to cell " + coordsFront[0] + ", " + coordsFront[1] + ".");
+    				//System.out.println("2Moving to cell " + coordsFront[0] + ", " + coordsFront[1] + ".");
     				super.move();
 	    			moved = true;
     			}
@@ -356,7 +356,7 @@ public class FOExplorer extends Explorer {
     			coordsRight = surrounding[2].getCoords();
     			if(worldMap.getCell(coordsRight[0], coordsRight[1]).get('f')){
     				moveHistory.add(7);
-    				System.out.println("3Moving to cell " + coordsRight[0] + ", " + coordsRight[1] + ".");
+    				//System.out.println("3Moving to cell " + coordsRight[0] + ", " + coordsRight[1] + ".");
     				super.turnRight();
 	    			super.move();
 	    			moved = true;
@@ -365,7 +365,8 @@ public class FOExplorer extends Explorer {
     			coordsBack = surrounding[3].getCoords();
     			if(worldMap.getCell(coordsBack[0], coordsBack[1]).get('f')){
     				moveHistory.add(8);
-    				System.out.println("4Moving to cell " + coordsBack[0] + ", " + coordsBack[1] + ".");
+    				//
+    				////System.out.println("4Moving to cell " + coordsBack[0] + ", " + coordsBack[1] + ".");
     				super.turnRight();
     				super.turnRight();
     				super.move();
@@ -378,13 +379,13 @@ public class FOExplorer extends Explorer {
     				MapCell direction;
     				int[] coords = null;
     				for(int i = 0; i < relations.size(); i++){
-    					if(relations.get(i).getRelated().size() != 1){ //Pick an incomplete relation from the list
-    						direction = relations.get(0).getCell();
+    					if(relations.get(i).getRelated().size() > 1){ //Pick an incomplete relation from the list
+    						direction = relations.get(i).getCell();
     						coords = direction.getCoords();
     						break;
     					}else{
     						if(relations.get(i).getHazard() == 'w'){
-    							direction = relations.get(0).getCell();
+    							direction = relations.get(i).getCell();
     							coords = direction.getCoords();
     						}
     					}
@@ -395,29 +396,30 @@ public class FOExplorer extends Explorer {
 	    					//moveHistory.add(9);
 	    					makeMove('w', agentState[2]);
 	    					moved = true;
-	    					System.out.println("Moving in -x direction.");
+	    					//System.out.println("Moving in -x direction.");
 	    				}else if(coords[0] > agentState[0]){ //Move in +x direction
 	    					//moveHistory.add(10);
 	    					makeMove('e', agentState[2]);
 	    					moved = true;
-	    					System.out.println("Moving in +x direction.");
+	    					//System.out.println("Moving in +x direction.");
 	    				}else if(coords[1] < agentState[1]){ //Move in -y direction
 	    					//moveHistory.add(11);
 	    					makeMove('s', agentState[2]);
 	    					moved = true;
-	    					System.out.println("Moving in -y direction.");
+	    					//System.out.println("Moving in -y direction.");
 	    				}else if(coords[1] > agentState[1]){ //Move in +y direction
 	    					//moveHistory.add(12);
 	    					makeMove('n', agentState[2]);
 	    					moved = true;
-	    					System.out.println("Moving in +y direction.");
+	    					//System.out.println("Moving in +y direction.");
 	    				}
     				}
     			}
     		}
     		
     		if(!moved){ //If still haven't moved, move in any safe direction
-    			int random = (int) Math.random()*4;
+    			int random = (int) (Math.random()*4);
+    			//System.out.println(random+"1");
     			while(!moved){
 	    			if(moveList[random] == 1){
 	    				if(random == 0){ //Move left
@@ -425,28 +427,29 @@ public class FOExplorer extends Explorer {
 	    					super.turnLeft();
 	    					super.move();
 		    				moved = true;
-		    				System.out.println("Moving left.");
+		    				//System.out.println("Moving left.");
 		    			}else if(random == 1){ //Move forward
 		    				moveHistory.add(14);
 		    				super.move();
 		    				moved = true;
-		    				System.out.println("Moving forward.");
+		    				//System.out.println("Moving forward.");
 		    			}else if(random == 2){ //Move right
 		    				moveHistory.add(15);
 		    				super.turnRight();
 		    				super.move();
 		    				moved = true;
-		    				System.out.println("Moving right.");
+		    				//System.out.println("Moving right.");
 		    			}else if(random == 3){ //Move backward
 		    				moveHistory.add(16);
 		    				super.turnRight();
 		    				super.turnRight();
 		    				super.move();
 		    				moved = true;
-		    				System.out.println("Moving backward.");
+		    				//System.out.println("Moving backward.");
 		    			}
 	    			}else{
-	    				random = (int) Math.random()*4 + 1;
+	    				random = (int) (Math.random()*4);
+	    				//System.out.println(random);
 	    			}
     			}
     		}

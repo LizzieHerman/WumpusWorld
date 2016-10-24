@@ -242,7 +242,7 @@ public class Clause {
 	public int[] clause12(int[] currentState, Map worldMap){
 		int[] cellResult = new int[]{0,0,0,0};
 		int leastFlags = 20;
-		int cellNum = -1;
+		int cellNum = 0;//-1
 		MapCell[] surrounding = worldMap.getSurrounding(currentState[0], currentState[1], currentState[2]); //Current state being our X value, Y value, and facing.
 		
 		for(int i = 0; i < surrounding.length; i++){ //for the surrounding cells

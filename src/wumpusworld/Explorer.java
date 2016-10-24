@@ -107,9 +107,9 @@ public class Explorer {
         timesDied++;
         cost -= 1000;
         if(wumpus){
-        	System.out.print("You died to a wumpus in cell " + x + ", " + y + ". Returning to " + x1 + ", " + y1 + ".");
+        	//System.out.print("You died to a wumpus in cell " + x + ", " + y + ". Returning to " + x1 + ", " + y1 + ".");
         }else{
-        	System.out.print("You fell in a pit in cell " + x + ", " + y + ". Returning to " + x1 + ", " + y1 + ".");
+        	//System.out.print("You fell in a pit in cell " + x + ", " + y + ". Returning to " + x1 + ", " + y1 + ".");
         }
         x = x1;
         y = y1;
