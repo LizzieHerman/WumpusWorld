@@ -49,7 +49,7 @@ public class Map {
 	    	}else{
 	    		surrounding[0] = null;
 	    	}
-	    	if(y-1 > 0){ //Check right cell
+	    	if(y-1 >= 0){ //Check right cell
 	    		surrounding[2] = map[x][y-1];
 	    	}else{
 	    		surrounding[2] = null;
@@ -59,7 +59,7 @@ public class Map {
 	    	}else{
 	    		surrounding[1] = null;
 	    	}
-	    	if(x-1 > 0){ //Check backward cell
+	    	if(x-1 >= 0){ //Check backward cell
 	    		surrounding[3] = map[x-1][y];
 	    	}else{
 	    		surrounding[3] = null;
@@ -70,12 +70,12 @@ public class Map {
 	    	}else{
 	    		surrounding[0] = null;
 	    	}
-	    	if(x-1 > 0){ //Check right cell
+	    	if(x-1 >= 0){ //Check right cell
 	    		surrounding[2] = map[x-1][y];
 	    	}else{
 	    		surrounding[2] = null;
 	    	}
-	    	if(y-1 > 0){ //Check forward cell
+	    	if(y-1 >= 0){ //Check forward cell
 	    		surrounding[1] = map[x][y-1];
 	    	}else{
 	    		surrounding[1] = null;
@@ -86,7 +86,7 @@ public class Map {
 	    		surrounding[3] = null;
 	    	}
     	}else if(facing == 3){ //Facing west
-    		if(y-1 > 0){ //Check left cell
+    		if(y-1 >= 0){ //Check left cell
 	    		surrounding[0] = map[x][y-1];
 	    	}else{
 	    		surrounding[0] = null;
@@ -96,18 +96,18 @@ public class Map {
 	    	}else{
 	    		surrounding[2] = null;
 	    	}
-	    	if(x-1 > 0){ //Check forward cell
+	    	if(x-1 >= 0){ //Check forward cell
 	    		surrounding[1] = map[x-1][y];
 	    	}else{
 	    		surrounding[1] = null;
 	    	}
-	    	if(x+1 > 0){ //Check backward cell
+	    	if(x+1 < map.length){ //Check backward cell
 	    		surrounding[3] = map[x+1][y];
 	    	}else{
 	    		surrounding[3] = null;
 	    	}
     	}else{ //Facing north
-	    	if(x-1 > 0){ //Check left cell
+	    	if(x-1 >= 0){ //Check left cell
 	    		surrounding[0] = map[x-1][y];
 	    	}else{
 	    		surrounding[0] = null;
@@ -122,7 +122,7 @@ public class Map {
 	    	}else{
 	    		surrounding[1] = null;
 	    	}
-	    	if(y-1 > 0){ //Check backward cell
+	    	if(y-1 >= 0){ //Check backward cell
 	    		surrounding[3] = map[x][y-1];
 	    	}else{
 	    		surrounding[3] = null;

@@ -36,11 +36,7 @@ public class Explorer {
     }
     
     public void start(){
-        /*
-         * TO-DO
-         * decide how the program will start
-         */
-        turnRight();
+        move();
     }
     
     public void move(){
@@ -117,6 +113,7 @@ public class Explorer {
         }
         x = x1;
         y = y1;
+        
     }
     
     public void deadCoords(int x, int y){
@@ -126,7 +123,6 @@ public class Explorer {
     
     public void seeGlitter(){
         System.out.print("See Glittering");
-        // add gold to knowledge base
     }
     
     public void grabGold(){
@@ -149,11 +145,6 @@ public class Explorer {
         boolean[] senses = world.senseCell(x, y);
         // if don't smell stench or feel breeze then surrounding cells are safe
         if(!(senses[0] || senses[1])) System.out.print("Surrounding Cells are Safe");
-        /*
-         * TO-DO
-         * other methods update knowledge
-         * infer where to go
-        */
     }
     
     public void state(int[] agentState){
@@ -168,9 +159,5 @@ public class Explorer {
     
     public boolean checkWin(){
     	return this.gameWon;
-    }
-    
-    public int getCost(){
-        return cost;
     }
 }

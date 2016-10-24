@@ -26,7 +26,6 @@ public class PopUp extends JFrame{
         init(mess);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Pop-Up");
-        setType(Window.Type.POPUP);
     }
     
     private void init(String mess){

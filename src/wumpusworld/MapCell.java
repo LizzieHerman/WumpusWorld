@@ -34,49 +34,49 @@ public class MapCell extends Cell{
     }
     
     public boolean get(char c){
-        if(c == 'w') return wumpus;
-        if(c == 'p') return pit;
-        if(c == 'o') return obstacle;
-        if(c == 'g') return gold;
-        if(c == 'u') return wumpusFlag;
-        if(c == 'i') return pitFlag;
-        if(c == 'b') return beenHere;
-        if(c == 'f') return frontier;
-        if(c == 's') return safe;
+        if(c == 'w') return this.wumpus;
+        if(c == 'p') return this.pit;
+        if(c == 'o') return this.obstacle;
+        if(c == 'g') return this.gold;
+        if(c == 'u') return this.wumpusFlag;
+        if(c == 'i') return this.pitFlag;
+        if(c == 'b') return this.beenHere;
+        if(c == 'f') return this.frontier;
+        if(c == 's') return this.safe;
         if(c == 'l') return this.smell;
         if(c == 'z') return this.breeze;
-        if(c == 't') return glitter;
-        if(c == 'a') return flagable;
-        if(c == 'r') return ignoring;
-        if(c == 'n') return madeRelation;
+        if(c == 't') return this.glitter;
+        if(c == 'a') return this.flagable;
+        if(c == 'r') return this.ignoring;
+        if(c == 'n') return this.madeRelation;
         return false;
     }
     
     public void set(char c, boolean b){
-        //super.set(c, b);
-        if(c == 'u') wumpusFlag = b;
-        if(c == 'i') pitFlag = b;
-        if(c == 'b') beenHere = b;
-        if(c == 'f') frontier = b;
-        if(c == 's') safe = b;
-        if(c == 'l') smell = b;
-        if(c == 'z') breeze = b;
-        if(c == 't') glitter = b;
-        if(c == 'w') wumpus = b;
-        if(c == 'p') pit = b;
-        if(c == 'o') obstacle = b;
-        if(c == 'g') gold = b;
-        if(c == 'a') flagable = b;
-        if(c == 'r') ignoring = b;
-        if(c == 'n') madeRelation = b;
+        super.set(c, b);
+        if(c == 'u') this.wumpusFlag = b;
+        if(c == 'i') this.pitFlag = b;
+        if(c == 'b') this.beenHere = b;
+        if(c == 'f') this.frontier = b;
+        if(c == 's') this.safe = b;
+        if(c == 'l') this.smell = b;
+        if(c == 'z') this.breeze = b;
+        if(c == 't') this.glitter = b;
+        if(c == 'w') this.wumpus = b;
+        if(c == 'p') this.pit = b;
+        if(c == 'o') this.obstacle = b;
+        if(c == 'g') this.gold = b;
+        if(c == 'a') this.flagable = b;
+        if(c == 'r') this.ignoring = b;
+        if(c == 'n') this.madeRelation = b;
     }
     
     public void set(char c){
-        if(c == 'v') visited++;
+        if(c == 'v') this.visited++;
     }
     
     public int timesVisited(){
-        return visited;
+        return this.visited;
     }
     
     public int[] getCoords(){

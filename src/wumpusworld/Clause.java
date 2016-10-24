@@ -76,6 +76,7 @@ public class Clause {
 					worldMap.getCell(currentState[0], currentState[1]).set('s', true); //set safe, unflag hazards
 					worldMap.getCell(currentState[0], currentState[1]).set('u', false);
 					worldMap.getCell(currentState[0], currentState[1]).set('i', false);
+					worldMap.getCell(currentState[0], currentState[1]).set('f', false);
 					cellResult[0] = 1; //1 = need to update relation
 				}
 			}
@@ -284,12 +285,15 @@ public class Clause {
 	//Clause 3b, if you die in a cell, mark the cell as wumpus or pit
     public int[] clause13(int[] currentState, Map worldMap){
         int[] cellResult = new int[]{1};
+        worldMap.getCell(this.x, this.y).set('a', true); //Mark as flaggable to change hazard = true
+    	worldMap.getCell(this.x, this.y).set('s', false); //Mark as unsafe
         if(this.hazard){
         	worldMap.getCell(this.x, this.y).set('w', true);
         }else{
         	worldMap.getCell(this.x, this.y).set('p', true);
         }
         worldMap.getCell(this.x, this.y).set('f', false); //mark as !frontier
+        worldMap.getCell(this.x, this.y).set('a', false); //mark as !flaggable again
         
         //Clear die coords
         this.x = 0;
