@@ -4,6 +4,8 @@ package wumpusworld;
  *
  * @author Lizzie Herman, Greg Neznanski
  */
+
+ //MapCell stores the information which is relevent to the Explorer discovering the world
 public class MapCell extends Cell{
 	private boolean wumpusFlag;
     private boolean pitFlag;
@@ -71,10 +73,12 @@ public class MapCell extends Cell{
         if(c == 'n') this.madeRelation = b;
     }
     
+    //changes the number of times visited if the cell has already been visited
     public void set(char c){
         if(c == 'v') this.visited++;
     }
     
+    //returns how many times the Explorer has visited this cell
     public int timesVisited(){
         return this.visited;
     }

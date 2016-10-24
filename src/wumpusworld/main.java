@@ -15,8 +15,6 @@ public class main {
             System.out.println("Starting game size: " + i);
             while(!agent.checkWin()){
             	agent.start();
-            	//world.board.updateUI();
-            	//System.out.println("looping");
             }
             System.out.println("Cost: " + agent.cost);
         }

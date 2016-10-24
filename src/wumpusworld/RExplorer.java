@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package wumpusworld;
 import java.util.Random;
 /**
@@ -18,8 +12,6 @@ public class RExplorer extends Explorer {
     }
     
     public void start(){
-        System.out.println("So it begins."); //testline
-        //agressiveExplorer();
         cautiousExplorer();
     }
 
@@ -27,23 +19,12 @@ public class RExplorer extends Explorer {
         Random rand = new Random();
         int moves = 0;
         double num;
-        /* testlines
-        move();
-        move();
-        turnLeft();
-        move();
-        move();
-        */
+
         boolean[] senses = world.senseCell(x,y);
         while (senses[2] != true){ //while we do not see glittering 
-            System.out.println();
-            System.out.println("Current position is (" + x + "," + y + ")"); //testline
-           // System.out.println(world.senseCell(x,y)[0]); testlines
-          //  System.out.println(world.senseCell(x,y)[1]);
           
           //RANDOM MOVE
             if (senses[0] == false && senses[1] == false){ //if there is no present danger, we are supposed to move at random. 
-            //System.out.println("No danger detected."); //testline
                 num = rand.nextDouble();    //generate a random number
             /*
             * rather than a 1/3rd chance to turn left, 1/3rd turn right, 1/3rd move forward
@@ -174,11 +155,6 @@ public class RExplorer extends Explorer {
             }
             
             else {
-                //System.out.println("Danger is nearby.");
-                //if (world.senseCell(x,y)[0] == true)
-                //System.out.println("We detect a Wumpus.");
-                //if (world.senseCell(x,y)[1] == true)
-                //System.out.println("We detect a Pit.");
                 moves+=3;
                 turnRight();
                 turnRight();
@@ -201,7 +177,6 @@ public class RExplorer extends Explorer {
         double num;
         boolean[] senses = world.senseCell(x,y);
         while (senses[2] != true){ 
-            System.out.println("Current position is (" + x + "," + y + ")"); //testline
         num = rand.nextDouble();
         if (senses[0] == true && arrows != 0){ // if we smell a Wumpus and are currently armed
                 //We can be sure that for the first arrow we fire the Wumpus is not behind us, so we either need to fire to the front, left, or right.
@@ -224,7 +199,6 @@ public class RExplorer extends Explorer {
                 senses = world.senseCell(x,y);//update our senses
             }
         else if (num <= .25){  //move north
-                //System.out.println("Moving North."); //testline
                 switch (direction) {
                     case 1:
                         //use the fewest moves to face North
@@ -249,7 +223,6 @@ public class RExplorer extends Explorer {
                 }
                 
                 else if (num <= .50){ //move South
-                    //System.out.println("Moving South."); //testline
                     switch (direction) {
                     case 3:
                         //use the fewest moves to face South
@@ -272,7 +245,6 @@ public class RExplorer extends Explorer {
                 }
                 
                 else if (num <= .75){ //Move East
-                    //System.out.println("Moving East."); //testline
                     switch (direction) {
                     case 2:
                         //use the fewest moves to face East
@@ -297,7 +269,6 @@ public class RExplorer extends Explorer {
                 }
                 
                 else if (num <= 1){ //move West
-                    //System.out.println("Moving West."); //testline
                     switch (direction) {
                     case 4:
                         //use the fewest moves to face West
@@ -332,20 +303,12 @@ public class RExplorer extends Explorer {
         x = x1;
         y = y1;
         System.out.println("Feel Bump");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
     }
     
     public void hearScream(){
         cost += 10;
         System.out.print("WUMPUS SLAIN!");
         System.out.print("Heard Scream");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
     }
     
     // takes in last safe location and whetheror not a wumpus killed them
@@ -354,12 +317,10 @@ public class RExplorer extends Explorer {
         x = x1;
         y = y1;
         System.out.print("You died");
-        // add wumpus/ pit to knowledge base
     }
     
     public void seeGlitter(){
         System.out.print("See Glittering");
-        // add gold to knowledge base
     }
     
     public void grabGold(){
@@ -374,18 +335,10 @@ public class RExplorer extends Explorer {
     
     public void smellStench(){
         System.out.print("Smelled Stench");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
     }
     
     public void feelBreeze(){
         System.out.print("Felt Breeze");
-        /*
-         * TO-DO
-         * send sense info to knowledge base
-         */
     }
     
     

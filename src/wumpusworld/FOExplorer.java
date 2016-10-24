@@ -37,7 +37,7 @@ public class FOExplorer extends Explorer {
          numWump = num;
          worldMap.setCell(x, y, 'v');
          worldMap.setCell(x, y, 's', true);
-         rules = new Clause[16];    ////change size to total number of clauses after all have been added to Clause
+         rules = new Clause[16];    //change size to total number of clauses after all have been added to Clause
          for(int i = 0; i < 16; i++){
         	 rules[i] = new Clause(i);
          }
@@ -93,7 +93,6 @@ public class FOExplorer extends Explorer {
         for(int i = 0; i < relations.size(); i++){
         	if(relations.get(i).relatedTo().getCoords()[0] == agentState[0]){
         		if(relations.get(i).relatedTo().getCoords()[1] == agentState[1]){
-        			//if(relations.get(i).getRelated().size() == 1){ //
         				if(relations.get(i).getRelated().get(0).getCoords()[0] == super.deadCell[0]){
         					if(relations.get(i).getRelated().get(0).getCoords()[1] == super.deadCell[1]){
         						if(relations.get(i).getHazard() == 'u'){ //If relation is found, update the relation with the new information
@@ -109,7 +108,6 @@ public class FOExplorer extends Explorer {
         	        			}
         					}
         				}
-        			//}
         		}
         	}
         }
@@ -134,7 +132,7 @@ public class FOExplorer extends Explorer {
     }
     
     //Update cells using clauses
-    public void updateDB(){  ////////////////////////////////////Update loop numbers when all clauses added
+    public void updateDB(){  //Update loop numbers when all clauses added
     	int[] result;
     	
     	//Clause 3c - if not dead, mark current cell as safe
@@ -251,8 +249,7 @@ public class FOExplorer extends Explorer {
     	
     	//Implement solution to repeated movements
     	//check last 5 moves for repeat pattern
-    	//if pattern, dont let move to repeat location, take risk or force to frontier
-    	//This is not working correctly, it finds a pattern and forces a different move, but it ends up in the pattern again
+    	//if pattern, don't let it move to repeat location, take risk or force to frontier
     	if(moveHistory.size() == 5){
 	    	if(moveHistory.get(0) == moveHistory.get(2) && moveHistory.get(1) == moveHistory.get(3)){
 	    		if(moveHistory.get(4) == moveHistory.get(1)){
@@ -392,22 +389,18 @@ public class FOExplorer extends Explorer {
     				
     				if(coords != null){ //Move in the direction of the relation
 	    				if(coords[0] < agentState[0]){ //Move in -x direction
-	    					//moveHistory.add(9);
 	    					makeMove('w', agentState[2]);
 	    					moved = true;
 	    					System.out.println("Moving in -x direction.");
 	    				}else if(coords[0] > agentState[0]){ //Move in +x direction
-	    					//moveHistory.add(10);
 	    					makeMove('e', agentState[2]);
 	    					moved = true;
 	    					System.out.println("Moving in +x direction.");
 	    				}else if(coords[1] < agentState[1]){ //Move in -y direction
-	    					//moveHistory.add(11);
 	    					makeMove('s', agentState[2]);
 	    					moved = true;
 	    					System.out.println("Moving in -y direction.");
 	    				}else if(coords[1] > agentState[1]){ //Move in +y direction
-	    					//moveHistory.add(12);
 	    					makeMove('n', agentState[2]);
 	    					moved = true;
 	    					System.out.println("Moving in +y direction.");

@@ -45,19 +45,6 @@ public class GameBoard extends JFrame {
                     grid[i][j] = new JLabel(Integer.toString(x));
                 }else{
                     String inCell = world[x][y];
-                    if(inCell.isEmpty() || inCell.equalsIgnoreCase("empty")){
-                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/empty.png")));
-                    }else if(inCell.equalsIgnoreCase("explorer")){
-                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/explorer1.png")));
-                    }else if(inCell.equalsIgnoreCase("wumpus")){
-                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/wumpus.png")));
-                    }else if(inCell.equalsIgnoreCase("pit")){
-                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/pit.png")));
-                    }else if(inCell.equalsIgnoreCase("gold")){
-                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/gold.png")));
-                    }else if(inCell.equalsIgnoreCase("wall")){
-                        //grid[i][j] = new JLabel(new ImageIcon(getClass().getResource("/wumpusworld/wall.png")));
-                    }
                     
                     if(i <= actualWorld.length && j <= actualWorld.length){
                     	grid[i][j] = new JLabel(actualWorld[i-1][j-1].getDisplay());

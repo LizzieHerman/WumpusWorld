@@ -18,7 +18,7 @@ public class Explorer {
     private boolean wumpusKilled;
     boolean gameWon;
     
-    public Explorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number wumpi num
+    public Explorer(WumpusWorld w, int n, int num){ // the world it is exploring, world size (n by n), number of wumpi
         x = 0;
         y = 0;
         direction = 1;
@@ -56,7 +56,6 @@ public class Explorer {
                 break;
         }
         world.moveExplorer(x, y);
-        //getPercepts();
     }
     
     public void turnRight(){
